@@ -2,11 +2,17 @@ import { motion, useReducedMotion } from 'framer-motion';
 import type { CSSProperties, ReactNode } from 'react';
 import type { Easing, TargetAndTransition } from 'framer-motion';
 
-/** Wraps every illustration's SVG root with a consistent viewBox and sizing. */
+/** Wraps every illustration's SVG root with a consistent viewBox, sizing, and a slow ambient drift. */
 export function IllustrationSvg({ children }: { children: ReactNode }) {
+  const reduced = useReducedMotion();
   return (
     <svg viewBox="0 0 220 220" className="h-full w-full max-w-[290px] overflow-visible" aria-hidden="true">
-      {children}
+      <motion.g
+        animate={reduced ? undefined : { y: [0, -4, 0], rotate: [-0.6, 0.6, -0.6] }}
+        transition={reduced ? undefined : { duration: 6, ease: 'easeInOut', repeat: Infinity }}
+      >
+        {children}
+      </motion.g>
     </svg>
   );
 }
@@ -91,15 +97,15 @@ interface PopInProps {
   style?: CSSProperties;
 }
 
-/** Fade + scale spring entrance for a group of shapes. */
+/** Fade + scale + rise spring entrance for a group of shapes. */
 export function PopIn({ children, delay = 0.35, style }: PopInProps) {
   const reduced = useReducedMotion();
   return (
     <motion.g
       style={style}
-      initial={reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.85 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 18, delay }}
+      initial={reduced ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.78, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 240, damping: 16, delay }}
     >
       {children}
     </motion.g>
@@ -130,20 +136,20 @@ interface LoopDef {
 }
 
 const LOOPS: Record<LoopKind, LoopDef> = {
-  float: { animate: { y: [0, -7, 0] }, duration: 3.5, ease: 'easeInOut', repeatType: 'loop' },
-  sway: { animate: { rotate: [-2, 2, -2] }, duration: 4, ease: 'easeInOut', repeatType: 'loop' },
-  walk: { animate: { y: [0, -3, 0] }, duration: 1.1, ease: 'easeInOut', repeatType: 'loop' },
-  spin: { animate: { rotate: [0, 360] }, duration: 14, ease: 'linear', repeatType: 'loop' },
-  pulse: { animate: { scale: [1, 1.18, 1] }, duration: 1.3, ease: 'easeInOut', repeatType: 'loop' },
-  twinkle: { animate: { opacity: [0.15, 1, 0.15] }, duration: 1.8, ease: 'easeInOut', repeatType: 'loop' },
-  drop: { animate: { y: [0, 26], opacity: [0, 0.8, 0.8, 0] }, duration: 1.2, ease: 'linear', repeatType: 'loop' },
-  wag: { animate: { rotate: [-10, 18] }, duration: 0.5, ease: 'easeInOut', repeatType: 'mirror' },
-  steam: { animate: { y: [0, -16], opacity: [0.7, 0] }, duration: 2.2, ease: 'easeOut', repeatType: 'loop' },
-  flame: { animate: { scale: [1, 1.15, 1], y: [0, -1.5, 0] }, duration: 0.8, ease: 'easeInOut', repeatType: 'loop' },
-  flap: { animate: { scaleX: [1, 0.25] }, duration: 0.5, ease: 'easeInOut', repeatType: 'mirror' },
-  zz: { animate: { y: [0, -20], opacity: [0, 0.8, 0] }, duration: 2.4, ease: 'easeOut', repeatType: 'loop' },
-  fall: { animate: { y: [-6, 30], rotate: [0, 30], opacity: [0, 0.8, 0.8, 0] }, duration: 3.2, ease: 'linear', repeatType: 'loop' },
-  breathe: { animate: { scale: [1, 1.05, 1] }, duration: 4, ease: 'easeInOut', repeatType: 'loop' },
+  float: { animate: { y: [0, -13, 0] }, duration: 3.2, ease: 'easeInOut', repeatType: 'loop' },
+  sway: { animate: { rotate: [-5, 5, -5] }, duration: 3.6, ease: 'easeInOut', repeatType: 'loop' },
+  walk: { animate: { y: [0, -6, 0] }, duration: 1.1, ease: 'easeInOut', repeatType: 'loop' },
+  spin: { animate: { rotate: [0, 360] }, duration: 11, ease: 'linear', repeatType: 'loop' },
+  pulse: { animate: { scale: [1, 1.28, 1] }, duration: 1.2, ease: 'easeInOut', repeatType: 'loop' },
+  twinkle: { animate: { opacity: [0.12, 1, 0.12] }, duration: 1.5, ease: 'easeInOut', repeatType: 'loop' },
+  drop: { animate: { y: [0, 34], opacity: [0, 0.8, 0.8, 0] }, duration: 1.1, ease: 'linear', repeatType: 'loop' },
+  wag: { animate: { rotate: [-18, 28] }, duration: 0.45, ease: 'easeInOut', repeatType: 'mirror' },
+  steam: { animate: { y: [0, -24], opacity: [0.7, 0] }, duration: 2, ease: 'easeOut', repeatType: 'loop' },
+  flame: { animate: { scale: [1, 1.22, 1], y: [0, -2.5, 0] }, duration: 0.7, ease: 'easeInOut', repeatType: 'loop' },
+  flap: { animate: { scaleX: [1, 0.2] }, duration: 0.45, ease: 'easeInOut', repeatType: 'mirror' },
+  zz: { animate: { y: [0, -28], opacity: [0, 0.8, 0] }, duration: 2.2, ease: 'easeOut', repeatType: 'loop' },
+  fall: { animate: { y: [-6, 38], rotate: [0, 45], opacity: [0, 0.8, 0.8, 0] }, duration: 2.9, ease: 'linear', repeatType: 'loop' },
+  breathe: { animate: { scale: [1, 1.08, 1] }, duration: 3.6, ease: 'easeInOut', repeatType: 'loop' },
 };
 
 interface LoopProps {
