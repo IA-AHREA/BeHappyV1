@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Duerme lo suficiente." — someone asleep in bed under a crescent moon. */
 export default function Sleep() {
@@ -9,6 +9,7 @@ export default function Sleep() {
         <path className="ink-line" d="M186 172 v10 M38 172 v10" />
         <path className="ink-line" fill="#f7f3ea" d="M52 132 q0 -10 12 -10 h18 q10 0 10 10 v10 h-40 z" />
         <circle className="ink-fill" cx={76} cy={126} r={8} />
+        <Face cx={76} cy={126} r={8} expression="closed" />
         <path className="ink-line" opacity={0.85} d="M58 144 Q120 132 186 144" />
       </PopIn>
       <PopIn delay={0.5}>

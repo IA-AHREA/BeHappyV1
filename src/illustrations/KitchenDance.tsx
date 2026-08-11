@@ -1,4 +1,4 @@
-import { IllustrationSvg, Loop, PopIn } from './primitives';
+import { Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Baila en la cocina." — dancing by the stove with notes floating overhead. */
 export default function KitchenDance() {
@@ -7,6 +7,7 @@ export default function KitchenDance() {
       <PopIn>
         <Loop kind="walk">
           <circle className="ink-fill" cx={96} cy={66} r={9} />
+          <Face cx={96} cy={66} r={9} expression="smile" />
           <path className="ink-line" d="M96 75 Q104 96 100 118" />
           <path className="ink-line" d="M98 86 L70 66 M98 92 L128 74" />
           <path className="ink-line" d="M100 118 L82 148 L86 168 M100 118 L122 138 L118 168" />

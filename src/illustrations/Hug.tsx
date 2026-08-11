@@ -1,4 +1,4 @@
-import { IllustrationSvg, Loop, PopIn } from './primitives';
+import { Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Abraza fuerte." — two figures wrapped in a tight embrace. */
 export default function Hug() {
@@ -7,7 +7,9 @@ export default function Hug() {
       <PopIn>
         <Loop kind="breathe" style={{ transformOrigin: '110px 130px' }}>
           <circle className="ink-fill" cx={92} cy={76} r={10} />
+          <Face cx={92} cy={76} r={10} expression="content" />
           <circle className="ink-fill" cx={128} cy={80} r={9} />
+          <Face cx={128} cy={80} r={9} expression="content" blinkDelay={0.6} />
           <path className="ink-line" d="M94 86 Q90 120 92 156" />
           <path className="ink-line" d="M126 89 Q130 120 128 156" />
           <path className="ink-line" d="M96 98 Q118 92 134 104" />

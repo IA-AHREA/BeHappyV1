@@ -1,4 +1,4 @@
-import { DrawEllipse, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawEllipse, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Compra flores." — a café table with a vase of flowers and a steaming cup. */
 export default function Flowers() {
@@ -23,6 +23,7 @@ export default function Flowers() {
       </PopIn>
       <PopIn delay={0.8}>
         <circle className="ink-fill" cx={46} cy={72} r={9} />
+        <Face cx={46} cy={72} r={9} expression="content" />
         <path className="ink-line" d="M48 81 Q53 100 53 122" />
         <path className="ink-line" d="M50 94 L84 106" />
         <path className="ink-line" d="M53 122 L76 126 L76 158 M53 122 L60 158" />

@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Aprende algo inútil." — someone juggling three balls just for the joy of it. */
 export default function Juggling() {
@@ -6,6 +6,7 @@ export default function Juggling() {
     <IllustrationSvg>
       <PopIn>
         <circle className="ink-fill" cx={110} cy={96} r={9} />
+        <Face cx={110} cy={96} r={9} expression="content" />
         <path className="ink-line" d="M110 105 L110 142" />
         <path className="ink-line" d="M110 116 L84 100 M110 116 L136 100" />
         <path className="ink-line" d="M110 142 L96 180 M110 142 L124 180" />

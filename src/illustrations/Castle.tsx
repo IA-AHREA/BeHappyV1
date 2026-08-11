@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Trata de llegar." — a traveler with a walking stick nearing a castle on a hill. */
 export default function Castle() {
@@ -23,6 +23,7 @@ export default function Castle() {
           <path className="ink-line" d="M107 115 L105 108" />
           <path className="ink-line" d="M40 150 Q28 154 26 170" />
           <circle className="ink-fill" cx={68} cy={108} r={8} />
+          <Face cx={68} cy={108} r={8} expression="smile" />
           <path className="ink-line" d="M68 116 L67 140 L62 158" />
           <path className="ink-line" d="M68 124 L92 128 L108 120" />
         </Loop>

@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Llama a quien extrañas." — two people on a call, a heart pulsing between them. */
 export default function PhoneCall() {
@@ -6,12 +6,14 @@ export default function PhoneCall() {
     <IllustrationSvg>
       <PopIn>
         <circle className="ink-fill" cx={52} cy={102} r={10} />
+        <Face cx={52} cy={102} r={10} expression="smile" />
         <path className="ink-line" d="M52 112 Q50 140 52 162" />
         <path className="ink-line" d="M52 122 L68 110" />
         <path className="ink-line" d="M64 96 h9 v16 h-9 z" />
       </PopIn>
       <PopIn delay={0.4}>
         <circle className="ink-fill" cx={168} cy={102} r={10} />
+        <Face cx={168} cy={102} r={10} expression="smile" blinkDelay={0.6} />
         <circle className="ink-line" cx={168} cy={88} r={6} />
         <path className="ink-line" opacity={0.8} d="M158 104 a5 5 0 1 0 8 0 M163 104 h10 M172 104 a5 5 0 1 0 8 0" />
         <path className="ink-line" d="M168 112 Q170 140 168 162" />

@@ -1,4 +1,4 @@
-import { IllustrationSvg, Loop, PopIn } from './primitives';
+import { Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Suelta lo que pesa." — a figure letting go of balloons and watching them drift off. */
 export default function Balloons() {
@@ -24,6 +24,7 @@ export default function Balloons() {
       </PopIn>
       <PopIn delay={0.5}>
         <circle className="ink-fill" cx={122} cy={120} r={9} />
+        <Face cx={122} cy={120} r={9} expression="content" />
         <path className="ink-line" d="M122 129 L122 160" />
         <path className="ink-line" d="M122 136 L124 110 M122 138 L104 128" />
         <path className="ink-line" d="M122 160 L110 190 M122 160 L134 188" />

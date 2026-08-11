@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Haz una pausa." — resting on a bench under a tree, leaves drifting down. */
 export default function TreeRest() {
@@ -14,6 +14,7 @@ export default function TreeRest() {
       <PopIn delay={0.5}>
         <path className="ink-line" opacity={0.85} d="M110 158 h74 M118 158 v32 M176 158 v32 M110 166 h74" />
         <circle className="ink-fill" cx={140} cy={130} r={8} />
+        <Face cx={140} cy={130} r={8} expression="content" />
         <path className="ink-line" d="M142 138 Q146 150 146 158 M144 146 L158 150" />
         <path className="ink-line" opacity={0.9} d="M146 158 L146 178 L160 178" />
       </PopIn>

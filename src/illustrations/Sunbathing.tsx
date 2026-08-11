@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Toma el sol." — someone stretched out on a lounger under a spinning sun. */
 export default function Sunbathing() {
@@ -18,6 +18,7 @@ export default function Sunbathing() {
         <DrawPath d="M40 105 L72 142 L168 142" />
         <path className="ink-line" d="M80 142 L74 174 M156 142 L162 174" />
         <circle className="ink-fill" cx={52} cy={102} r={8} />
+        <Face cx={52} cy={102} r={8} expression="closed" />
         <path className="ink-line" d="M58 108 L92 140 L134 140" />
         <path className="ink-line" d="M134 140 L146 122 L160 140" />
         <path className="ink-line" opacity={0.7} d="M186 142 L186 116 M178 116 h16 M180 116 q6 -8 12 0" />

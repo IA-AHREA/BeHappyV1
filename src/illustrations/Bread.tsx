@@ -1,4 +1,4 @@
-import { IllustrationSvg, Loop, PopIn } from './primitives';
+import { Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Comparte tu pan." — two people breaking bread together at a shared table. */
 export default function Bread() {
@@ -9,12 +9,14 @@ export default function Bread() {
       </PopIn>
       <PopIn delay={0.3}>
         <circle className="ink-fill" cx={56} cy={94} r={9} />
+        <Face cx={56} cy={94} r={9} expression="smile" />
         <path className="ink-line" d="M58 103 Q62 130 60 154" />
         <path className="ink-line" d="M60 114 L92 108" />
         <path className="ink-line" d="M60 154 L48 176 M60 154 L74 174" />
       </PopIn>
       <PopIn delay={0.5}>
         <circle className="ink-fill" cx={164} cy={94} r={9} />
+        <Face cx={164} cy={94} r={9} expression="smile" blinkDelay={0.5} />
         <path className="ink-line" d="M162 103 Q158 130 160 154" />
         <path className="ink-line" d="M160 114 L128 108" />
         <path className="ink-line" d="M160 154 L172 176 M160 154 L146 174" />

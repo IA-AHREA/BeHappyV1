@@ -21,7 +21,7 @@
   .ink-line {
     fill: none;
     stroke: theme('colors.ink');
-    stroke-width: 2.2;
+    stroke-width: 2.4;
     stroke-linecap: round;
     stroke-linejoin: round;
   }

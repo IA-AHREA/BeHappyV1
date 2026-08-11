@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Camina sin rumbo." — a solitary walk along a winding path past a signpost. */
 export default function Walking() {
@@ -19,6 +19,7 @@ export default function Walking() {
       <PopIn delay={0.7}>
         <Loop kind="walk">
           <circle className="ink-fill" cx={94} cy={118} r={8} />
+          <Face cx={94} cy={118} r={8} expression="content" />
           <path className="ink-line" d="M94 126 L94 152" />
           <path className="ink-line" d="M94 134 L80 146 M94 134 L108 144" />
           <path className="ink-line" d="M94 152 L82 176 M94 152 L106 174" />

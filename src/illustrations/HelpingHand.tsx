@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Pide ayuda." — one figure reaching down to pull another up from a pit. */
 export default function HelpingHand() {
@@ -10,6 +10,7 @@ export default function HelpingHand() {
       </PopIn>
       <PopIn delay={0.3}>
         <circle className="ink-fill" cx={64} cy={78} r={9} />
+        <Face cx={64} cy={78} r={9} expression="smile" />
         <path className="ink-line" d="M64 87 Q68 104 66 122" />
         <path className="ink-line" d="M66 96 L104 120" />
         <path className="ink-line" opacity={0.7} d="M66 122 l-12 0 M66 122 l10 2" />
@@ -17,6 +18,7 @@ export default function HelpingHand() {
       <PopIn delay={0.6}>
         <Loop kind="walk">
           <circle className="ink-fill" cx={140} cy={120} r={9} />
+          <Face cx={140} cy={120} r={9} expression="content" blinkDelay={1} />
           <path className="ink-line" d="M138 129 Q134 150 136 168" />
           <path className="ink-line" d="M136 138 L106 122" />
           <path className="ink-line" d="M136 168 L126 196 M136 168 L148 194" />

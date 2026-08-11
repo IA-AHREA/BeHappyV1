@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Vuelve a intentarlo." — a kite climbing again, tugged along by its flyer. */
 export default function Kite() {
@@ -15,6 +15,7 @@ export default function Kite() {
       <PopIn delay={0.6}>
         <DrawPath className="ink-line" opacity={0.7} d="M148 92 Q110 130 76 132" />
         <circle className="ink-fill" cx={64} cy={112} r={8} />
+        <Face cx={64} cy={112} r={8} expression="smile" />
         <path className="ink-line" d="M64 120 L64 152" />
         <path className="ink-line" d="M64 128 L78 132 M64 128 L50 138" />
         <path className="ink-line" d="M64 152 L54 182 M64 152 L74 182" />

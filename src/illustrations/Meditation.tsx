@@ -1,4 +1,4 @@
-import { IllustrationSvg, Loop, PopIn } from './primitives';
+import { Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Regálate silencio." — a seated figure meditating inside soft breathing rings. */
 export default function Meditation() {
@@ -15,6 +15,7 @@ export default function Meditation() {
       <PopIn delay={0.4}>
         <Loop kind="breathe" style={{ transformOrigin: '110px 130px' }}>
           <circle className="ink-fill" cx={110} cy={84} r={11} />
+          <Face cx={110} cy={84} r={11} expression="closed" />
           <path className="ink-line" d="M110 95 Q106 120 108 138" />
           <path className="ink-line" d="M108 108 Q88 118 84 134 M110 108 Q132 118 136 134" />
           <path className="ink-line" d="M108 138 Q84 142 74 152 Q94 158 110 152 Q126 158 146 152 Q136 142 112 138" />

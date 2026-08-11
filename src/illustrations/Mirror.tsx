@@ -1,4 +1,4 @@
-import { DrawEllipse, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawEllipse, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Ríete de ti." — laughing at your own reflection in a standing mirror. */
 export default function Mirror() {
@@ -13,6 +13,7 @@ export default function Mirror() {
       <PopIn delay={0.5}>
         <Loop kind="walk">
           <circle className="ink-fill" cx={62} cy={84} r={9} />
+          <Face cx={62} cy={84} r={9} expression="smile" />
           <path className="ink-line" d="M64 93 Q66 120 64 148" />
           <path className="ink-line" d="M65 104 L86 96 M65 110 L46 122" />
           <path className="ink-line" d="M64 148 L54 186 M64 148 L76 184" />

@@ -1,13 +1,28 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { useId } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import type { Easing, TargetAndTransition } from 'framer-motion';
 
-/** Wraps every illustration's SVG root with a consistent viewBox, sizing, and a slow ambient drift. */
+const PAPER = '#f7f3ea';
+
+/**
+ * Wraps every illustration's SVG root with a consistent viewBox, sizing, a slow ambient
+ * drift, and a subtle hand-inked wobble (feTurbulence + feDisplacementMap) so lines read
+ * as sketched rather than machine-perfect.
+ */
 export function IllustrationSvg({ children }: { children: ReactNode }) {
   const reduced = useReducedMotion();
+  const filterId = useId();
   return (
     <svg viewBox="0 0 220 220" className="h-full w-full max-w-[290px] overflow-visible" aria-hidden="true">
+      <defs>
+        <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.018 0.035" numOctaves={2} seed={3} result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={1.6} xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
       <motion.g
+        style={{ filter: `url(#${filterId})` }}
         animate={reduced ? undefined : { y: [0, -4, 0], rotate: [-0.6, 0.6, -0.6] }}
         transition={reduced ? undefined : { duration: 6, ease: 'easeInOut', repeat: Infinity }}
       >
@@ -126,13 +141,15 @@ export type LoopKind =
   | 'flap'
   | 'zz'
   | 'fall'
-  | 'breathe';
+  | 'breathe'
+  | 'blink';
 
 interface LoopDef {
   animate: TargetAndTransition;
   duration: number;
   ease: Easing;
   repeatType: 'loop' | 'mirror';
+  times?: number[];
 }
 
 const LOOPS: Record<LoopKind, LoopDef> = {
@@ -150,6 +167,13 @@ const LOOPS: Record<LoopKind, LoopDef> = {
   zz: { animate: { y: [0, -28], opacity: [0, 0.8, 0] }, duration: 2.2, ease: 'easeOut', repeatType: 'loop' },
   fall: { animate: { y: [-6, 38], rotate: [0, 45], opacity: [0, 0.8, 0.8, 0] }, duration: 2.9, ease: 'linear', repeatType: 'loop' },
   breathe: { animate: { scale: [1, 1.08, 1] }, duration: 3.6, ease: 'easeInOut', repeatType: 'loop' },
+  blink: {
+    animate: { scaleY: [1, 1, 0.12, 1, 1] },
+    duration: 4.2,
+    ease: 'easeInOut',
+    repeatType: 'loop',
+    times: [0, 0.88, 0.93, 0.97, 1],
+  },
 };
 
 interface LoopProps {
@@ -182,6 +206,7 @@ export function Loop({ kind, delay = 0, children, style, className }: LoopProps)
         ease: def.ease,
         repeat: Infinity,
         repeatType: def.repeatType,
+        ...(def.times ? { times: def.times } : {}),
       }}
     >
       {children}
@@ -236,5 +261,71 @@ export function WriteLoop({ d, delay = 0, className = 'ink-line' }: WriteLoopPro
         ease: 'easeInOut',
       }}
     />
+  );
+}
+
+export type FaceExpression = 'smile' | 'content' | 'closed';
+
+interface FaceProps {
+  /** Center and radius of the solid head circle this face sits on top of. */
+  cx: number;
+  cy: number;
+  r: number;
+  expression?: FaceExpression;
+  /** Delay before the periodic blink starts, so two nearby characters don't blink in lockstep. */
+  blinkDelay?: number;
+}
+
+/**
+ * A minimal face "cut out" of a solid ink-fill head in paper color: two small dots for
+ * eyes and a curved line for a mouth. Open-eyed expressions blink gently on a loop;
+ * `closed` renders resting/sleeping eyes instead.
+ */
+export function Face({ cx, cy, r, expression = 'smile', blinkDelay = 0 }: FaceProps) {
+  const eyeDx = r * 0.36;
+  const eyeY = cy - r * 0.05;
+  const eyeR = Math.max(r * 0.12, 0.8);
+  const strokeW = Math.max(r * 0.14, 1);
+  const mouthY = cy + r * 0.38;
+  const mouthWidth = r * 0.55;
+  const mouthDepth = expression === 'content' ? r * 0.16 : r * 0.32;
+
+  if (expression === 'closed') {
+    return (
+      <g>
+        <path
+          d={`M ${cx - eyeDx - eyeR} ${eyeY} q ${eyeR} ${eyeR * 0.9} ${eyeR * 2} 0`}
+          stroke={PAPER}
+          strokeWidth={strokeW}
+          strokeLinecap="round"
+          fill="none"
+        />
+        <path
+          d={`M ${cx + eyeDx - eyeR} ${eyeY} q ${eyeR} ${eyeR * 0.9} ${eyeR * 2} 0`}
+          stroke={PAPER}
+          strokeWidth={strokeW}
+          strokeLinecap="round"
+          fill="none"
+        />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <Loop kind="blink" delay={blinkDelay} style={{ transformOrigin: `${cx - eyeDx}px ${eyeY}px` }}>
+        <circle cx={cx - eyeDx} cy={eyeY} r={eyeR} fill={PAPER} />
+      </Loop>
+      <Loop kind="blink" delay={blinkDelay} style={{ transformOrigin: `${cx + eyeDx}px ${eyeY}px` }}>
+        <circle cx={cx + eyeDx} cy={eyeY} r={eyeR} fill={PAPER} />
+      </Loop>
+      <path
+        d={`M ${cx - mouthWidth / 2} ${mouthY} Q ${cx} ${mouthY + mouthDepth} ${cx + mouthWidth / 2} ${mouthY}`}
+        stroke={PAPER}
+        strokeWidth={strokeW}
+        strokeLinecap="round"
+        fill="none"
+      />
+    </g>
   );
 }

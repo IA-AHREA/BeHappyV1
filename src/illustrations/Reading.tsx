@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Lee." — a person climbing a ladder propped against a giant book. */
 export default function Reading() {
@@ -17,6 +17,7 @@ export default function Reading() {
       <PopIn delay={0.9}>
         <Loop kind="walk">
           <circle className="ink-fill" cx={80} cy={82} r={8} />
+          <Face cx={80} cy={82} r={8} expression="content" />
           <path className="ink-line" d="M80 90 L78 116" />
           <path className="ink-line" d="M78 116 L70 133 M78 116 L88 133" />
           <path className="ink-line" d="M79 98 L64 107 M79 98 L104 95" />

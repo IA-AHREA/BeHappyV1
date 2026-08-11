@@ -1,4 +1,4 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
 
 /** "Canta en el coche." — singing along behind the wheel, windows down. */
 export default function CarSinging() {
@@ -12,7 +12,7 @@ export default function CarSinging() {
           />
           <path className="ink-line" opacity={0.8} d="M66 146 l12 -22 h28 v22 z M112 124 h20 l16 22 h-36 z" />
           <circle className="ink-fill" cx={94} cy={136} r={6} opacity={0.9} />
-          <path className="ink-line" opacity={0.9} d="M92 130 q2 -4 4 0" />
+          <Face cx={94} cy={136} r={6} expression="smile" />
         </Loop>
       </PopIn>
       <PopIn>
