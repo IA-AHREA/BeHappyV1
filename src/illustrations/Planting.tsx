@@ -1,35 +1,31 @@
 import { DrawPath, GrowIn, IllustrationSvg, Loop, PopIn } from './primitives';
 
-/** "Planta algo." — a seedling sprouting from a pot, watered by a can. */
+/** "Planta algo." — a continuous-line pot with a growing seedling, watered from a can. */
 export default function Planting() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath d="M82 128 h64 l-8 56 h-48 z" />
-        <path className="ink-line" opacity={0.6} d="M86 140 h56" />
+        <DrawPath duration={0.9} d="M76 150 H144 L134 194 H86 Z" />
+        <path className="ink-line" opacity={0.5} d="M84 158 L78 186 M100 158 L96 190 M120 158 L124 190 M136 158 L142 186" />
       </PopIn>
-      <GrowIn style={{ transformOrigin: '114px 128px' }}>
-        <path className="ink-line" d="M114 128 Q112 96 114 76" />
-        <path className="ink-line" d="M114 100 Q94 96 90 78 Q110 78 114 96 Z" />
-        <path className="ink-line" d="M114 90 Q134 86 140 68 Q118 68 114 86 Z" />
-        <circle className="accent-fill" cx={114} cy={72} r={5} />
+      <GrowIn style={{ transformOrigin: '110px 150px' }}>
+        <path className="ink-line" d="M110 150 C108 122 110 96 110 74" />
+        <path className="ink-line" d="M110 96 C92 92 86 76 88 60 C106 62 112 80 110 96 Z" />
+        <path className="ink-line" d="M110 84 C128 80 136 64 134 48 C116 50 108 68 110 84 Z" />
       </GrowIn>
-      <PopIn delay={0.8}>
-        <path
-          className="ink-line"
-          transform="rotate(-24 170 110)"
-          d="M160 96 h22 q8 0 8 8 v12 q0 8 -8 8 h-22 z"
-        />
-        <path className="ink-line" transform="rotate(-24 170 110)" d="M158 104 l-14 10" />
-        <Loop kind="drop" delay={0.2}>
-          <path className="ink-line" opacity={0.7} d="M142 122 l-2 8" />
+      <PopIn delay={0.9}>
+        <path className="ink-line" d="M150 78 h28 v20 h-28 z" transform="rotate(-18 164 88)" />
+        <path className="ink-line" d="M178 82 c10 -2 18 2 20 10" transform="rotate(-18 164 88)" />
+        <path className="ink-line" d="M150 82 l-14 -4" transform="rotate(-18 164 88)" />
+        <Loop kind="drop">
+          <path className="ink-line" opacity={0.6} d="M140 112 l-3 10" />
         </Loop>
-        <Loop kind="drop" delay={0.7}>
-          <path className="ink-line" opacity={0.7} d="M150 124 l-2 8" />
+        <Loop kind="drop" delay={0.3}>
+          <path className="ink-line" opacity={0.6} d="M148 116 l-3 10" />
         </Loop>
-      </PopIn>
-      <PopIn delay={0.5}>
-        <path className="ink-line" opacity={0.35} d="M60 190 h110" />
+        <Loop kind="drop" delay={0.6}>
+          <path className="ink-line" opacity={0.6} d="M156 118 l-3 10" />
+        </Loop>
       </PopIn>
     </IllustrationSvg>
   );

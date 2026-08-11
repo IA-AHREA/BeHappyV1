@@ -1,33 +1,29 @@
-import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
 
-/** "Llama a quien extrañas." — two people on a call, a heart pulsing between them. */
+/** "Llama a quien extrañas." — two continuous-line figures on a call, a heart pulsing between them. */
 export default function PhoneCall() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <circle className="ink-fill" cx={52} cy={102} r={10} />
-        <Face cx={52} cy={102} r={10} expression="smile" />
-        <path className="ink-line" d="M52 112 Q50 140 52 162" />
-        <path className="ink-line" d="M52 122 L68 110" />
-        <path className="ink-line" d="M64 96 h9 v16 h-9 z" />
+        <DrawPath duration={1} d="M50 90 C42 89 36 95 36 103 C36 109 40 113 46 115 C40 122 36 132 38 144 C39 152 43 158 49 162" />
+        <path className="ink-line" d="M50 90 C58 90 63 95 62 101 C61 106 57 109 53 110" />
+        <path className="ink-line" d="M49 162 C51 172 49 182 44 190" />
+        <path className="ink-line" d="M49 162 C56 168 60 178 57 190" />
+        <path className="ink-line" d="M46 115 C56 112 64 108 68 102" />
       </PopIn>
-      <PopIn delay={0.4}>
-        <circle className="ink-fill" cx={168} cy={102} r={10} />
-        <Face cx={168} cy={102} r={10} expression="smile" blinkDelay={0.6} />
-        <circle className="ink-line" cx={168} cy={88} r={6} />
-        <path className="ink-line" opacity={0.8} d="M158 104 a5 5 0 1 0 8 0 M163 104 h10 M172 104 a5 5 0 1 0 8 0" />
-        <path className="ink-line" d="M168 112 Q170 140 168 162" />
-        <path className="ink-line" d="M168 122 L152 110" />
-        <path className="ink-line" d="M147 96 h9 v16 h-9 z" />
+      <PopIn delay={0.3}>
+        <DrawPath duration={1} d="M168 90 C176 89 182 95 182 103 C182 109 178 113 172 115" />
+        <path className="ink-line" d="M168 90 C160 90 155 95 156 101 C157 106 161 109 165 110" />
+        <path className="ink-line" d="M172 115 C178 122 182 132 180 144 C179 152 175 158 169 162" />
+        <path className="ink-line" d="M169 162 C167 172 169 182 174 190" />
+        <path className="ink-line" d="M169 162 C162 168 158 178 161 190" />
+        <path className="ink-line" d="M172 115 C162 112 154 108 150 102" />
       </PopIn>
       <PopIn delay={0.7}>
-        <DrawPath className="ink-line" opacity={0.55} strokeDasharray="5 6" d="M78 84 Q90 74 100 84 Q110 94 120 84 Q130 74 142 84" />
-        <Loop kind="pulse" style={{ transformOrigin: '110px 56px' }}>
-          <path className="accent-fill" d="M110 66 q-12 -10 -8 -18 q4 -7 8 -1 q4 -6 8 1 q4 8 -8 18 z" />
+        <path className="ink-line" opacity={0.5} strokeDasharray="4 5" d="M70 100 Q90 88 108 100" />
+        <Loop kind="pulse" style={{ transformOrigin: '109px 110px' }}>
+          <path className="ink-line" d="M109 92 C100 82 84 88 84 100 C84 112 100 122 109 128 C118 122 134 112 134 100 C134 88 118 82 109 92 Z" />
         </Loop>
-      </PopIn>
-      <PopIn delay={0.9}>
-        <path className="ink-line" opacity={0.5} d="M30 176 h160" />
       </PopIn>
     </IllustrationSvg>
   );

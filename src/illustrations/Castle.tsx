@@ -1,31 +1,28 @@
-import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
 
-/** "Trata de llegar." — a traveler with a walking stick nearing a castle on a hill. */
+/** "Trata de llegar." — a continuous-line traveler with a walking stick, nearing a castle. */
 export default function Castle() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath d="M8 192 Q120 116 212 156" />
-        <path className="ink-line" d="M142 140 v-38 h38 v38" />
-        <path className="ink-line" opacity={0.9} d="M142 102 h6 v-7 h8 v7 h8 v-7 h8 v7 h8" />
-        <path className="ink-line" d="M126 140 v-72 h16 v72 M126 68 L134 48 L142 68" />
-        <path className="ink-line" d="M180 140 v-62 h14 v62 M180 78 L187 60 L194 78" />
-        <path className="accent-fill" d="M134 48 v-15 l12 5 l-12 5 z" />
-        <path className="ink-line" opacity={0.8} d="M155 140 v-14 a7 7 0 0 1 14 0 v14" />
-        <circle className="ink-line" cx={134} cy={90} r={3} opacity={0.6} />
-        <circle className="ink-line" cx={187} cy={96} r={3} opacity={0.6} />
+        <path className="ink-line" opacity={0.4} d="M10 185 C70 155 140 155 205 178" />
+        <DrawPath duration={1.4} d="M140 150 V110 H176 V150" />
+        <path className="ink-line" d="M140 118 h6 v-8 h8 v8 h8 v-8 h8 v8 h6" />
+        <DrawPath duration={1} delay={0.3} d="M126 150 V96 H150 V150 M126 96 L138 74 L150 96" />
+        <DrawPath duration={1} delay={0.4} d="M176 150 V102 H196 V150 M176 102 L186 82 L196 102" />
+        <path className="ink-line" d="M154 150 V128 C154 120 166 120 166 128 V150" />
       </PopIn>
       <PopIn delay={0.6}>
         <Loop kind="walk">
-          <path className="ink-line" d="M38 158 Q38 144 52 142 L84 142 Q96 144 96 156 Q96 162 90 163 L46 163 Q38 162 38 158 Z" />
-          <path className="ink-line" d="M46 163 L43 188 M58 163 L57 188 M80 163 L80 188 M90 161 L94 187" />
-          <path className="ink-line" d="M88 142 Q94 122 106 116 L114 114 Q120 114 119 120 Q118 125 111 125 L104 127 Q96 132 94 142" />
-          <path className="ink-line" d="M107 115 L105 108" />
-          <path className="ink-line" d="M40 150 Q28 154 26 170" />
-          <circle className="ink-fill" cx={68} cy={108} r={8} />
-          <Face cx={68} cy={108} r={8} expression="smile" />
-          <path className="ink-line" d="M68 116 L67 140 L62 158" />
-          <path className="ink-line" d="M68 124 L92 128 L108 120" />
+          <DrawPath
+            duration={1}
+            d="M54 108 C44 107 36 115 36 125 C36 132 41 138 48 140"
+          />
+          <path className="ink-line" d="M54 108 C62 108 68 114 66 122 C65 127 61 131 56 132" />
+          <path className="ink-line" d="M48 140 C40 148 36 160 38 172 C39 178 42 184 46 188" />
+          <path className="ink-line" d="M48 140 C56 146 62 156 64 168 C65 176 63 184 58 190" />
+          <path className="ink-line" d="M64 168 L80 110" />
+          <path className="ink-line" opacity={0.5} d="M46 188 h6 M58 190 h6" />
         </Loop>
       </PopIn>
     </IllustrationSvg>

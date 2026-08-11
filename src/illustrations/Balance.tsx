@@ -1,29 +1,31 @@
-import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
 
-/** "Vive el momento." — a tightrope walker balanced between PASADO and FUTURO. */
+/** "Vive el momento." — a continuous-line tightrope walker balanced between PASADO and FUTURO. */
 export default function Balance() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <path className="ink-line" d="M36 196 L36 108 M184 196 L184 108" />
-        <circle className="ink-fill" cx={36} cy={108} r={3} />
-        <circle className="ink-fill" cx={184} cy={108} r={3} />
-        <DrawPath d="M36 108 Q110 126 184 108" />
-        <text x={14} y={214} fontFamily="Nunito Sans, sans-serif" fontSize={11} fill="#6b665c" letterSpacing={2}>
+        <path className="ink-line" opacity={0.4} d="M40 180 V96 M180 180 V96" />
+        <DrawPath duration={1.2} d="M40 96 C90 108 130 108 180 96" />
+        <text x={16} y={196} fontFamily="Nunito Sans, sans-serif" fontSize={10} fill="#6b665c" letterSpacing={2}>
           PASADO
         </text>
-        <text x={160} y={214} fontFamily="Nunito Sans, sans-serif" fontSize={11} fill="#6b665c" letterSpacing={2}>
+        <text x={150} y={196} fontFamily="Nunito Sans, sans-serif" fontSize={10} fill="#6b665c" letterSpacing={2}>
           FUTURO
         </text>
       </PopIn>
       <PopIn delay={0.6}>
-        <Loop kind="sway" style={{ transformOrigin: '110px 117px' }}>
-          <path className="ink-line" opacity={0.8} d="M72 96 L148 96" />
-          <circle className="ink-fill" cx={110} cy={66} r={9} />
-          <Face cx={110} cy={66} r={9} expression="content" />
-          <path className="ink-line" d="M110 75 L110 102" />
-          <path className="ink-line" d="M110 84 L84 95 M110 84 L136 95" />
-          <path className="ink-line" d="M110 102 L102 117 M110 102 L118 117" />
+        <Loop kind="sway" style={{ transformOrigin: '105px 100px' }}>
+          <DrawPath
+            duration={1}
+            d="M104 50 C94 49 86 57 86 67 C86 74 91 79 98 81"
+          />
+          <path className="ink-line" d="M104 50 C114 49 122 57 121 67 C120 74 115 79 108 80" />
+          <path className="ink-line" d="M98 81 C96 90 97 98 100 104" />
+          <path className="ink-line" d="M108 80 C111 90 111 98 108 104" />
+          <path className="ink-line" d="M100 104 C99 110 99 116 101 120 M108 104 C109 110 109 116 107 120" />
+          <path className="ink-line" d="M99 78 C82 74 64 74 52 78" />
+          <path className="ink-line" d="M107 78 C124 74 142 74 154 78" />
         </Loop>
       </PopIn>
     </IllustrationSvg>

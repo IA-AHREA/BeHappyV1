@@ -1,29 +1,32 @@
-import { Face, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
 
-/** "Abraza fuerte." — two figures wrapped in a tight embrace. */
+/** "Abraza fuerte." — two continuous-line figures wrapped in a tight embrace. */
 export default function Hug() {
   return (
     <IllustrationSvg>
       <PopIn>
         <Loop kind="breathe" style={{ transformOrigin: '110px 130px' }}>
-          <circle className="ink-fill" cx={92} cy={76} r={10} />
-          <Face cx={92} cy={76} r={10} expression="content" />
-          <circle className="ink-fill" cx={128} cy={80} r={9} />
-          <Face cx={128} cy={80} r={9} expression="content" blinkDelay={0.6} />
-          <path className="ink-line" d="M94 86 Q90 120 92 156" />
-          <path className="ink-line" d="M126 89 Q130 120 128 156" />
-          <path className="ink-line" d="M96 98 Q118 92 134 104" />
-          <path className="ink-line" d="M124 100 Q102 94 86 106" />
-          <path className="ink-line" d="M92 156 L84 186 M92 156 L100 186 M128 156 L120 186 M128 156 L136 186" />
+          <DrawPath duration={1} d="M80 84 C72 83 66 89 66 97 C66 103 70 107 76 108" />
+          <path className="ink-line" d="M80 84 C88 83 94 89 92 96 C91 101 87 104 82 105" />
+          <path className="ink-line" d="M76 108 C68 112 62 120 60 130 C58 140 60 150 66 158" />
+          <path className="ink-line" d="M66 158 C64 168 66 178 72 186" />
+          <path className="ink-line" d="M66 158 C70 166 70 176 66 186" />
+          <path className="ink-line" d="M78 106 C92 110 106 112 118 108" />
+          <DrawPath duration={1} delay={0.15} d="M140 84 C148 83 154 89 154 97 C154 103 150 107 144 108" />
+          <path className="ink-line" d="M140 84 C132 83 126 89 128 96 C129 101 133 104 138 105" />
+          <path className="ink-line" d="M144 108 C152 112 158 120 160 130 C162 140 160 150 154 158" />
+          <path className="ink-line" d="M154 158 C156 168 154 178 148 186" />
+          <path className="ink-line" d="M154 158 C150 166 150 176 154 186" />
+          <path className="ink-line" d="M142 106 C128 110 114 112 102 108" />
         </Loop>
       </PopIn>
       <PopIn delay={0.6}>
         <Loop kind="pulse" style={{ transformOrigin: '110px 40px' }}>
-          <path className="accent-fill" d="M110 50 q-13 -11 -9 -19 q4 -7 9 -1 q5 -6 9 1 q4 8 -9 19 z" />
+          <path className="ink-line" d="M110 50 q-13 -11 -9 -19 q4 -7 9 -1 q5 -6 9 1 q4 8 -9 19 z" />
         </Loop>
       </PopIn>
       <PopIn delay={0.5}>
-        <path className="ink-line" opacity={0.35} d="M60 192 h100" />
+        <path className="ink-line" opacity={0.4} d="M56 196 h108" />
       </PopIn>
     </IllustrationSvg>
   );

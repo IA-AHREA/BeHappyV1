@@ -1,40 +1,35 @@
-import { IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
 
-/** "Mira las estrellas." — a telescope pointed at a twinkling night sky. */
+/** "Mira las estrellas." — a continuous-line figure stargazing through a telescope. */
 export default function Telescope() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <path className="ink-line" d="M172 44 a18 18 0 1 0 4 30 a15 15 0 0 1 -4 -30 z" />
+        <DrawPath duration={1.1} d="M60 150 C52 149 46 155 46 163 C46 169 50 173 56 175" />
+        <path className="ink-line" d="M60 150 C68 149 74 155 72 161 C71 166 67 170 62 171" />
+        <path className="ink-line" d="M56 175 C50 182 46 192 48 202 C49 208 52 212 56 214" />
+        <path className="ink-line" d="M56 214 L52 200 M56 214 L64 202" />
+        <DrawPath duration={0.6} delay={0.3} d="M62 170 L104 110" strokeWidth={4} />
+        <path className="ink-line" d="M96 122 L114 98 L124 106 L106 130 Z" />
+        <path className="ink-line" d="M56 178 L86 158" />
+        <path className="ink-line" d="M64 186 L92 168" />
       </PopIn>
-      <PopIn delay={0.3}>
+      <PopIn delay={0.6}>
         <Loop kind="twinkle">
-          <path className="accent-fill" d="M50 40 l2.5 6 l6 2.5 l-6 2.5 l-2.5 6 l-2.5 -6 l-6 -2.5 l6 -2.5 z" />
+          <path className="ink-line" d="M150 50 l3 8 l8 3 l-8 3 l-3 8 l-3 -8 l-8 -3 l8 -3 z" />
         </Loop>
         <Loop kind="twinkle" delay={0.5}>
-          <path className="accent-fill" d="M96 28 l2.5 6 l6 2.5 l-6 2.5 l-2.5 6 l-2.5 -6 l-6 -2.5 l6 -2.5 z" />
+          <path className="ink-line" d="M180 84 l2.5 6 l6 2.5 l-6 2.5 l-2.5 6 l-2.5 -6 l-6 -2.5 l6 -2.5 z" />
         </Loop>
         <Loop kind="twinkle" delay={1}>
-          <circle className="ink-fill" cx={76} cy={66} r={2.4} />
-        </Loop>
-        <Loop kind="twinkle" delay={1.3}>
-          <circle className="ink-fill" cx={126} cy={48} r={2.4} />
+          <circle cx={130} cy={90} r={2} fill="#2b2a28" />
         </Loop>
         <Loop kind="twinkle" delay={0.8}>
-          <circle className="ink-fill" cx={140} cy={80} r={2.4} />
+          <circle cx={168} cy={40} r={2} fill="#2b2a28" />
         </Loop>
       </PopIn>
-      <PopIn delay={0.6}>
-        <path className="ink-line" fill="#f7f3ea" d="M60 158 L118 108 M64 150 L112 108 L124 116 L72 160 Z" />
-        <path className="ink-line" opacity={0.8} d="M92 138 L74 190 M92 138 L112 190 M92 138 L92 190" />
-      </PopIn>
-      <PopIn delay={0.9}>
-        <circle className="ink-fill" cx={146} cy={140} r={8} />
-        <path className="ink-line" d="M146 148 Q148 166 146 190 M146 156 L128 146" />
-        <path className="ink-line" opacity={0.7} d="M146 190 l-8 0 M146 190 l0 0" />
-      </PopIn>
-      <PopIn delay={0.6}>
-        <path className="ink-line" opacity={0.35} d="M40 194 h140" />
+      <PopIn delay={0.5}>
+        <path className="ink-line" opacity={0.55} d="M148 130 a20 20 0 1 1 22 -22" />
       </PopIn>
     </IllustrationSvg>
   );

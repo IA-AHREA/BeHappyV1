@@ -3,8 +3,6 @@ import { useId } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import type { Easing, TargetAndTransition } from 'framer-motion';
 
-const PAPER = '#f7f3ea';
-
 /**
  * Wraps every illustration's SVG root with a consistent viewBox, sizing, a slow ambient
  * drift, and a subtle hand-inked wobble (feTurbulence + feDisplacementMap) so lines read
@@ -40,6 +38,7 @@ interface DrawPathProps {
   fill?: string;
   className?: string;
   strokeDasharray?: string;
+  strokeWidth?: number;
 }
 
 /** A path that draws itself on via Framer Motion's pathLength. */
@@ -51,6 +50,7 @@ export function DrawPath({
   fill = 'none',
   className = 'ink-line',
   strokeDasharray,
+  strokeWidth,
 }: DrawPathProps) {
   const reduced = useReducedMotion();
   return (
@@ -59,46 +59,7 @@ export function DrawPath({
       fill={fill}
       className={className}
       strokeDasharray={strokeDasharray}
-      initial={reduced ? { pathLength: 1, opacity } : { pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity }}
-      transition={reduced ? { duration: 0 } : { duration, delay, ease: 'easeInOut' }}
-    />
-  );
-}
-
-interface DrawEllipseProps {
-  cx: number;
-  cy: number;
-  rx: number;
-  ry: number;
-  delay?: number;
-  duration?: number;
-  opacity?: number;
-  fill?: string;
-  className?: string;
-}
-
-/** An ellipse that draws itself on via Framer Motion's pathLength — for rims, tables, mirror frames. */
-export function DrawEllipse({
-  cx,
-  cy,
-  rx,
-  ry,
-  delay = 0,
-  duration = 1.4,
-  opacity = 1,
-  fill = 'none',
-  className = 'ink-line',
-}: DrawEllipseProps) {
-  const reduced = useReducedMotion();
-  return (
-    <motion.ellipse
-      cx={cx}
-      cy={cy}
-      rx={rx}
-      ry={ry}
-      fill={fill}
-      className={className}
+      strokeWidth={strokeWidth}
       initial={reduced ? { pathLength: 1, opacity } : { pathLength: 0, opacity: 0 }}
       animate={{ pathLength: 1, opacity }}
       transition={reduced ? { duration: 0 } : { duration, delay, ease: 'easeInOut' }}
@@ -141,8 +102,7 @@ export type LoopKind =
   | 'flap'
   | 'zz'
   | 'fall'
-  | 'breathe'
-  | 'blink';
+  | 'breathe';
 
 interface LoopDef {
   animate: TargetAndTransition;
@@ -167,13 +127,6 @@ const LOOPS: Record<LoopKind, LoopDef> = {
   zz: { animate: { y: [0, -28], opacity: [0, 0.8, 0] }, duration: 2.2, ease: 'easeOut', repeatType: 'loop' },
   fall: { animate: { y: [-6, 38], rotate: [0, 45], opacity: [0, 0.8, 0.8, 0] }, duration: 2.9, ease: 'linear', repeatType: 'loop' },
   breathe: { animate: { scale: [1, 1.08, 1] }, duration: 3.6, ease: 'easeInOut', repeatType: 'loop' },
-  blink: {
-    animate: { scaleY: [1, 1, 0.12, 1, 1] },
-    duration: 4.2,
-    ease: 'easeInOut',
-    repeatType: 'loop',
-    times: [0, 0.88, 0.93, 0.97, 1],
-  },
 };
 
 interface LoopProps {
@@ -261,71 +214,5 @@ export function WriteLoop({ d, delay = 0, className = 'ink-line' }: WriteLoopPro
         ease: 'easeInOut',
       }}
     />
-  );
-}
-
-export type FaceExpression = 'smile' | 'content' | 'closed';
-
-interface FaceProps {
-  /** Center and radius of the solid head circle this face sits on top of. */
-  cx: number;
-  cy: number;
-  r: number;
-  expression?: FaceExpression;
-  /** Delay before the periodic blink starts, so two nearby characters don't blink in lockstep. */
-  blinkDelay?: number;
-}
-
-/**
- * A minimal face "cut out" of a solid ink-fill head in paper color: two small dots for
- * eyes and a curved line for a mouth. Open-eyed expressions blink gently on a loop;
- * `closed` renders resting/sleeping eyes instead.
- */
-export function Face({ cx, cy, r, expression = 'smile', blinkDelay = 0 }: FaceProps) {
-  const eyeDx = r * 0.36;
-  const eyeY = cy - r * 0.05;
-  const eyeR = Math.max(r * 0.12, 0.8);
-  const strokeW = Math.max(r * 0.14, 1);
-  const mouthY = cy + r * 0.38;
-  const mouthWidth = r * 0.55;
-  const mouthDepth = expression === 'content' ? r * 0.16 : r * 0.32;
-
-  if (expression === 'closed') {
-    return (
-      <g>
-        <path
-          d={`M ${cx - eyeDx - eyeR} ${eyeY} q ${eyeR} ${eyeR * 0.9} ${eyeR * 2} 0`}
-          stroke={PAPER}
-          strokeWidth={strokeW}
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d={`M ${cx + eyeDx - eyeR} ${eyeY} q ${eyeR} ${eyeR * 0.9} ${eyeR * 2} 0`}
-          stroke={PAPER}
-          strokeWidth={strokeW}
-          strokeLinecap="round"
-          fill="none"
-        />
-      </g>
-    );
-  }
-
-  return (
-    <g>
-      <Loop kind="blink" delay={blinkDelay} style={{ transformOrigin: `${cx - eyeDx}px ${eyeY}px` }}>
-        <circle cx={cx - eyeDx} cy={eyeY} r={eyeR} fill={PAPER} />
-      </Loop>
-      <Loop kind="blink" delay={blinkDelay} style={{ transformOrigin: `${cx + eyeDx}px ${eyeY}px` }}>
-        <circle cx={cx + eyeDx} cy={eyeY} r={eyeR} fill={PAPER} />
-      </Loop>
-      <path
-        d={`M ${cx - mouthWidth / 2} ${mouthY} Q ${cx} ${mouthY + mouthDepth} ${cx + mouthWidth / 2} ${mouthY}`}
-        stroke={PAPER}
-        strokeWidth={strokeW}
-        strokeLinecap="round"
-        fill="none"
-      />
-    </g>
   );
 }

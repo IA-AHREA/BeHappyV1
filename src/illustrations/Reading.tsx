@@ -1,26 +1,29 @@
-import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
 
-/** "Lee." — a person climbing a ladder propped against a giant book. */
+/** "Lee." — a continuous-line figure climbing a ladder propped on a giant book. */
 export default function Reading() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath d="M115 32 h78 a6 6 0 0 1 6 6 v146 a6 6 0 0 1 -6 6 h-78 z" />
-        <path className="ink-line" d="M115 32 q-10 5 -10 12 v132 q0 7 10 12" />
-        <path className="ink-line" opacity={0.5} d="M130 62 h48 M130 76 h40 M130 90 h48 M130 104 h36" />
-        <ellipse className="ink-line" cx={150} cy={197} rx={58} ry={6} opacity={0.35} />
+        <DrawPath duration={1.6} d="M120 40 C150 34 178 38 190 48 L190 178 C178 168 150 164 120 170 Z" />
+        <path className="ink-line" opacity={0.55} d="M132 60 h46 M132 74 h40 M132 88 h46 M132 102 h34" />
+        <path className="ink-line" opacity={0.4} d="M110 188 C140 180 170 180 200 188" />
       </PopIn>
       <PopIn delay={0.5}>
-        <DrawPath d="M30 205 L98 55 M58 205 L126 55" />
-        <path className="ink-line" opacity={0.8} d="M44 175 h29 M53 155 h29 M62 135 h29 M71 115 h29 M80 95 h29 M89 75 h29" />
+        <DrawPath duration={1} delay={0.1} d="M40 195 L96 60" />
+        <DrawPath duration={1} delay={0.25} d="M64 195 L120 60" />
+        <path className="ink-line" opacity={0.5} d="M50 172 l20 -5 M56 152 l20 -5 M62 132 l20 -5 M68 112 l20 -5 M74 92 l20 -5 M80 72 l20 -5" />
       </PopIn>
-      <PopIn delay={0.9}>
+      <PopIn delay={1}>
         <Loop kind="walk">
-          <circle className="ink-fill" cx={80} cy={82} r={8} />
-          <Face cx={80} cy={82} r={8} expression="content" />
-          <path className="ink-line" d="M80 90 L78 116" />
-          <path className="ink-line" d="M78 116 L70 133 M78 116 L88 133" />
-          <path className="ink-line" d="M79 98 L64 107 M79 98 L104 95" />
+          <DrawPath
+            duration={1}
+            d="M78 66 C70 65 64 71 64 79 C64 85 68 89 74 91 C68 96 62 106 64 116 C65 121 68 124 72 126"
+          />
+          <path className="ink-line" d="M78 66 C84 66 88 70 87 76 C86 80 83 83 79 84" />
+          <path className="ink-line" d="M74 91 C84 88 94 84 100 78" />
+          <path className="ink-line" d="M72 126 C74 132 72 138 68 142" />
+          <path className="ink-line" d="M72 126 C78 130 82 136 80 142" />
         </Loop>
       </PopIn>
     </IllustrationSvg>

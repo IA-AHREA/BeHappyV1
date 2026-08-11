@@ -1,33 +1,38 @@
-import { DrawPath, Face, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
 
-/** "Camina sin rumbo." — a solitary walk along a winding path past a signpost. */
+/** "Camina sin rumbo." — a continuous-line solitary walker along a winding path. */
 export default function Walking() {
   return (
     <IllustrationSvg>
       <PopIn>
         <DrawPath
+          duration={2}
           className="ink-line"
-          opacity={0.6}
-          strokeDasharray="7 8"
+          opacity={0.5}
+          strokeDasharray="6 7"
           d="M20 190 Q70 168 60 140 Q50 112 104 104 Q160 96 150 64 Q146 48 170 40"
         />
       </PopIn>
-      <PopIn delay={0.4}>
-        <path className="ink-line" d="M174 150 v40 M160 150 h28 l-6 -12 h-16 z" />
-        <path className="ink-line" opacity={0.85} d="M162 128 h24 l8 8 l-8 8 h-24 z M186 106 h-24 l-8 8 l8 8 h24 z" />
+      <PopIn delay={0.5}>
+        <path className="ink-line" d="M174 130 V190" />
+        <path className="ink-line" d="M174 140 h26 l10 8 l-10 8 h-26 z" />
+        <path className="ink-line" opacity={0.55} d="M174 112 h-24 l-10 8 l10 8 h24 z" />
       </PopIn>
-      <PopIn delay={0.7}>
+      <PopIn delay={0.8}>
         <Loop kind="walk">
-          <circle className="ink-fill" cx={94} cy={118} r={8} />
-          <Face cx={94} cy={118} r={8} expression="content" />
-          <path className="ink-line" d="M94 126 L94 152" />
-          <path className="ink-line" d="M94 134 L80 146 M94 134 L108 144" />
-          <path className="ink-line" d="M94 152 L82 176 M94 152 L106 174" />
+          <DrawPath duration={0.9} d="M94 108 C86 107 80 113 80 121 C80 127 84 131 90 133" />
+          <path className="ink-line" d="M94 108 C102 107 108 113 106 119 C105 124 101 128 97 129" />
+          <path className="ink-line" d="M90 133 C82 140 78 150 80 162 C81 170 85 176 91 180" />
+          <path className="ink-line" d="M91 180 C93 188 91 196 86 202" />
+          <path className="ink-line" d="M91 180 C98 184 102 192 99 202" />
+          <path className="ink-line" d="M90 133 C98 140 104 148 106 158" />
         </Loop>
       </PopIn>
-      <PopIn delay={1}>
-        <circle className="ink-line" cx={42} cy={46} r={12} opacity={0.7} />
-        <path className="ink-line" opacity={0.7} d="M42 28 v-6 M42 64 v6 M24 46 h-6 M60 46 h6" />
+      <PopIn delay={0.4}>
+        <Loop kind="spin" style={{ transformOrigin: '42px 46px' }}>
+          <circle className="ink-line" opacity={0.55} cx={42} cy={46} r={12} />
+          <path className="ink-line" opacity={0.55} d="M42 28 v-6 M42 64 v6 M24 46 h-6 M60 46 h6" />
+        </Loop>
       </PopIn>
     </IllustrationSvg>
   );
