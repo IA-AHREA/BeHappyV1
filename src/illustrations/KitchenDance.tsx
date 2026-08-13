@@ -1,6 +1,6 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Baila en la cocina." — a continuous-line figure dancing by the stove, notes floating. */
+/** "Baila en la cocina." — un muñeco de palo bailando junto a la estufa, notas flotando. */
 export default function KitchenDance() {
   return (
     <IllustrationSvg>
@@ -13,17 +13,14 @@ export default function KitchenDance() {
       </PopIn>
       <PopIn>
         <Loop kind="walk">
-          <DrawPath
-            duration={1}
-            d="M76 62 C68 60 60 66 60 76 C60 84 65 90 72 92"
+          <StickFigure
+            head={[72, 100]}
+            torso={[[72, 110], [72, 144]]}
+            armL={[[72, 118], [54, 122], [46, 108]]}
+            armR={[[72, 118], [90, 122], [98, 108]]}
+            legL={[[72, 144], [58, 162], [54, 182], [48, 183]]}
+            legR={[[72, 144], [86, 162], [90, 182], [96, 183]]}
           />
-          <path className="ink-line" d="M76 62 C84 61 90 67 89 75 C88 80 84 84 79 85" />
-          <path className="ink-line" d="M72 92 C60 100 52 114 54 130" />
-          <path className="ink-line" d="M72 92 C82 100 92 112 92 128" />
-          <path className="ink-line" d="M54 130 C50 140 52 150 58 156" />
-          <path className="ink-line" d="M92 128 C98 122 106 118 114 118" />
-          <path className="ink-line" d="M74 82 C64 74 56 62 56 50" />
-          <path className="ink-line" d="M78 82 C90 78 100 70 104 58" />
         </Loop>
       </PopIn>
       <PopIn delay={0.7}>

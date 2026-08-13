@@ -1,33 +1,38 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn, StickFigure, line } from './primitives';
 
-/** "Pide ayuda." — a continuous-line figure reaching down to pull another up from a pit. */
+/** "Pide ayuda." — un muñeco de palo arrodillado ayuda a otro a salir del pozo. */
 export default function HelpingHand() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath duration={1.2} d="M30 200 V128 H100 V200" />
-        <path className="ink-line" opacity={0.4} d="M40 150 h18 M44 168 h22 M38 186 h16" />
+        <DrawPath duration={1.2} d="M30 136 V204 H110 V136" />
+        <path className="ink-line" opacity={0.7} d="M14 136 H30 M110 136 H200" />
+        <path className="ink-line" opacity={0.4} d="M38 156 h16 M44 174 h20 M36 190 h14" />
       </PopIn>
       <PopIn delay={0.3}>
-        <DrawPath duration={1} d="M56 90 C48 89 42 95 42 103 C42 109 46 113 52 115" />
-        <path className="ink-line" d="M56 90 C64 89 70 95 68 101 C67 106 63 109 58 110" />
-        <path className="ink-line" d="M52 115 C48 122 46 130 48 138" />
-        <path className="ink-line" d="M52 115 C58 122 62 130 76 134" />
-        <path className="ink-line" d="M48 138 C44 148 42 158 44 168" />
-        <path className="ink-line" d="M48 138 C52 146 54 154 52 164" />
-      </PopIn>
-      <PopIn delay={0.6}>
         <Loop kind="walk">
-          <DrawPath duration={1} d="M96 156 C104 155 110 161 110 169 C110 175 106 179 100 181" />
-          <path className="ink-line" d="M96 156 C88 155 82 161 84 167 C85 172 89 175 94 176" />
-          <path className="ink-line" d="M100 181 C104 190 106 198 104 206" />
-          <path className="ink-line" d="M100 181 C94 188 92 196 96 206" />
-          <path className="ink-line" d="M94 176 C86 168 80 160 78 150" />
+          <StickFigure
+            head={[66, 150]}
+            r={9}
+            torso={[[66, 159], [66, 192]]}
+            armR={[[66, 166], [78, 152], [88, 140]]}
+            armL={[[66, 166], [56, 180], [58, 192]]}
+            legL={[[66, 192], [61, 204]]}
+            legR={[[66, 192], [71, 204]]}
+          />
         </Loop>
       </PopIn>
+      <PopIn delay={0.6}>
+        <circle className="ink-line" cx={130} cy={88} r={10} />
+        <path className="ink-line" d={line([130, 98], [134, 124])} />
+        <path className="ink-line" d={line([130, 106], [114, 122], [97, 137])} />
+        <path className="ink-line" d={line([130, 106], [141, 116], [139, 128])} />
+        <path className="ink-line" d={line([134, 124], [148, 135], [164, 134])} />
+        <path className="ink-line" d={line([134, 124], [142, 137], [158, 138])} />
+      </PopIn>
       <PopIn delay={0.9}>
-        <Loop kind="pulse" style={{ transformOrigin: '77px 141px' }}>
-          <circle cx={77} cy={141} r={3} fill="#2b2a28" opacity={0.5} />
+        <Loop kind="pulse" style={{ transformOrigin: '93px 139px' }}>
+          <circle cx={93} cy={139} r={3} fill="#2b2a28" opacity={0.5} />
         </Loop>
       </PopIn>
     </IllustrationSvg>

@@ -8,7 +8,9 @@ export default function Sleep() {
         <DrawPath duration={1.3} d="M34 172 v-56 q0 -8 8 -8 h12 M34 172 h156 v-28 h-152" />
         <path className="ink-line" opacity={0.5} d="M186 172 v10 M38 172 v10" />
         <path className="ink-line" d="M52 132 q0 -10 12 -10 h18 q10 0 10 10 v10 h-40 z" />
-        <DrawPath duration={0.7} delay={0.3} d="M68 108 m -16 0 a 16 16 0 1 0 32 0 a 16 16 0 1 0 -32 0" />
+        <DrawPath duration={0.7} delay={0.3} d="M68 110 m -12 0 a 12 12 0 1 0 24 0 a 12 12 0 1 0 -24 0" />
+        <path className="ink-line" opacity={0.7} d="M63 110 q3 3 6 0 M72 110 q3 3 6 0" />
+        <path className="ink-line" opacity={0.7} d="M66 117 q3 2 6 0" />
         <path className="ink-line" opacity={0.6} d="M58 144 Q120 132 186 144" />
       </PopIn>
       <PopIn delay={0.5}>

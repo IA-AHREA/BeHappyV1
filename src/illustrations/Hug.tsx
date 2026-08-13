@@ -1,23 +1,21 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { IllustrationSvg, Loop, PopIn, line } from './primitives';
 
-/** "Abraza fuerte." — two continuous-line figures wrapped in a tight embrace. */
+/** "Abraza fuerte." — dos muñecos de palo abrazados, brazos cruzados sobre la espalda del otro. */
 export default function Hug() {
   return (
     <IllustrationSvg>
       <PopIn>
         <Loop kind="breathe" style={{ transformOrigin: '110px 130px' }}>
-          <DrawPath duration={1} d="M80 84 C72 83 66 89 66 97 C66 103 70 107 76 108" />
-          <path className="ink-line" d="M80 84 C88 83 94 89 92 96 C91 101 87 104 82 105" />
-          <path className="ink-line" d="M76 108 C68 112 62 120 60 130 C58 140 60 150 66 158" />
-          <path className="ink-line" d="M66 158 C64 168 66 178 72 186" />
-          <path className="ink-line" d="M66 158 C70 166 70 176 66 186" />
-          <path className="ink-line" d="M78 106 C92 110 106 112 118 108" />
-          <DrawPath duration={1} delay={0.15} d="M140 84 C148 83 154 89 154 97 C154 103 150 107 144 108" />
-          <path className="ink-line" d="M140 84 C132 83 126 89 128 96 C129 101 133 104 138 105" />
-          <path className="ink-line" d="M144 108 C152 112 158 120 160 130 C162 140 160 150 154 158" />
-          <path className="ink-line" d="M154 158 C156 168 154 178 148 186" />
-          <path className="ink-line" d="M154 158 C150 166 150 176 154 186" />
-          <path className="ink-line" d="M142 106 C128 110 114 112 102 108" />
+          <circle className="ink-line" cx={98} cy={84} r={10} />
+          <circle className="ink-line" cx={122} cy={84} r={10} />
+          <path className="ink-line" d={line([101, 93], [96, 132])} />
+          <path className="ink-line" d={line([119, 93], [124, 132])} />
+          <path className="ink-line" d={line([100, 101], [116, 108], [130, 114])} />
+          <path className="ink-line" d={line([120, 101], [104, 108], [90, 114])} />
+          <path className="ink-line" d={line([96, 132], [91, 152], [89, 172], [83, 172])} />
+          <path className="ink-line" d={line([96, 132], [101, 152], [103, 172], [108, 172])} />
+          <path className="ink-line" d={line([124, 132], [129, 152], [131, 172], [137, 172])} />
+          <path className="ink-line" d={line([124, 132], [119, 152], [117, 172], [112, 172])} />
         </Loop>
       </PopIn>
       <PopIn delay={0.6}>
@@ -26,7 +24,7 @@ export default function Hug() {
         </Loop>
       </PopIn>
       <PopIn delay={0.5}>
-        <path className="ink-line" opacity={0.4} d="M56 196 h108" />
+        <path className="ink-line" opacity={0.4} d="M60 178 H160" />
       </PopIn>
     </IllustrationSvg>
   );

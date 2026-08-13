@@ -1,32 +1,37 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Programa un plan realista." — a continuous-line figure with wild hair and a hairdryer. */
+/** "Programa un plan realista." — un muñeco de palo se seca el pelo alborotado con la secadora. */
 export default function HairDryer() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath
-          duration={1.4}
-          d="M96 70 C86 68 78 76 78 88 C78 96 83 102 90 105 C82 112 76 126 78 140 C79 148 83 153 89 156"
+        <StickFigure
+          head={[95, 88]}
+          torso={[[95, 98], [95, 134]]}
+          armR={[[95, 106], [116, 120], [137, 112]]}
+          armL={[[95, 106], [84, 120], [80, 132]]}
+          legL={[[95, 134], [88, 154], [86, 174], [80, 174]]}
+          legR={[[95, 134], [102, 154], [104, 174], [112, 174]]}
         />
-        <path className="ink-line" d="M96 70 C106 68 114 76 112 86 C111 92 106 96 100 97" />
-        <path className="ink-line" d="M89 156 C91 164 89 172 84 178" />
-        <path className="ink-line" d="M89 156 C96 162 100 170 97 178" />
+        <path className="ink-line" opacity={0.4} d="M60 178 H150" />
       </PopIn>
       <PopIn delay={0.5}>
-        <Loop kind="sway" style={{ transformOrigin: '90px 60px' }}>
-          <path
-            className="ink-line"
-            opacity={0.55}
-            d="M82 66 C76 56 66 50 54 48 M90 62 C86 50 78 40 66 34 M100 62 C100 48 96 36 90 24 M108 66 C112 54 120 44 132 40"
-          />
+        <DrawPath duration={0.6} d="M130 86 h26 q6 0 6 7 t-6 7 h-26 z" />
+        <path className="ink-line" d="M130 89 L116 90 L116 96 L130 97" />
+        <path className="ink-line" d="M142 100 L137 112" />
+        <path className="ink-line" opacity={0.5} d="M160 98 C170 108 170 122 162 134" />
+        <Loop kind="twinkle">
+          <path className="ink-line" opacity={0.4} d="M112 90 L106 88 M112 95 L106 95" />
         </Loop>
       </PopIn>
       <PopIn delay={0.7}>
-        <DrawPath duration={0.6} d="M118 88 h26 c8 0 8 16 0 16 h-26 z" />
-        <path className="ink-line" d="M118 92 h-14 v8 h14" />
-        <path className="ink-line" d="M144 96 L156 96 L166 88 M144 96 L160 104" />
-        <path className="ink-line" opacity={0.5} d="M112 90 C104 84 96 78 90 74" />
+        <Loop kind="sway" style={{ transformOrigin: '95px 80px' }}>
+          <path
+            className="ink-line"
+            opacity={0.55}
+            d="M90 79 C84 68 76 62 66 60 M95 78 C93 64 88 54 80 48 M100 78 C102 64 100 52 96 42 M104 81 C110 71 114 60 112 50"
+          />
+        </Loop>
       </PopIn>
     </IllustrationSvg>
   );

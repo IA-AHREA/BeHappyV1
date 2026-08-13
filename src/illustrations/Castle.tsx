@@ -1,6 +1,6 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Trata de llegar." — a continuous-line traveler with a walking stick, nearing a castle. */
+/** "Trata de llegar." — un muñeco de palo con bastón se acerca al castillo. */
 export default function Castle() {
   return (
     <IllustrationSvg>
@@ -14,15 +14,15 @@ export default function Castle() {
       </PopIn>
       <PopIn delay={0.6}>
         <Loop kind="walk">
-          <DrawPath
-            duration={1}
-            d="M54 108 C44 107 36 115 36 125 C36 132 41 138 48 140"
+          <StickFigure
+            head={[52, 88]}
+            torso={[[52, 98], [52, 134]]}
+            armR={[[52, 106], [64, 118], [75, 128]]}
+            armL={[[52, 106], [44, 120], [42, 132]]}
+            legR={[[52, 134], [61, 150], [66, 168], [72, 168]]}
+            legL={[[52, 134], [44, 150], [37, 166], [31, 166]]}
           />
-          <path className="ink-line" d="M54 108 C62 108 68 114 66 122 C65 127 61 131 56 132" />
-          <path className="ink-line" d="M48 140 C40 148 36 160 38 172 C39 178 42 184 46 188" />
-          <path className="ink-line" d="M48 140 C56 146 62 156 64 168 C65 176 63 184 58 190" />
-          <path className="ink-line" d="M64 168 L80 110" />
-          <path className="ink-line" opacity={0.5} d="M46 188 h6 M58 190 h6" />
+          <path className="ink-line" d="M80 106 L66 174" />
         </Loop>
       </PopIn>
     </IllustrationSvg>

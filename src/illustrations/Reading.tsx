@@ -1,6 +1,6 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Lee." — a continuous-line figure climbing a ladder propped on a giant book. */
+/** "Lee." — un muñeco de palo subiendo una escalera apoyada en un libro gigante. */
 export default function Reading() {
   return (
     <IllustrationSvg>
@@ -16,14 +16,15 @@ export default function Reading() {
       </PopIn>
       <PopIn delay={1}>
         <Loop kind="walk">
-          <DrawPath
-            duration={1}
-            d="M78 66 C70 65 64 71 64 79 C64 85 68 89 74 91 C68 96 62 106 64 116 C65 121 68 124 72 126"
+          <StickFigure
+            head={[88, 78]}
+            r={9}
+            torso={[[86, 87], [80, 120]]}
+            armL={[[85, 94], [76, 102], [82, 110]]}
+            armR={[[85, 94], [92, 88], [98, 84]]}
+            legL={[[80, 120], [72, 134], [64, 148]]}
+            legR={[[80, 120], [86, 136], [76, 150]]}
           />
-          <path className="ink-line" d="M78 66 C84 66 88 70 87 76 C86 80 83 83 79 84" />
-          <path className="ink-line" d="M74 91 C84 88 94 84 100 78" />
-          <path className="ink-line" d="M72 126 C74 132 72 138 68 142" />
-          <path className="ink-line" d="M72 126 C78 130 82 136 80 142" />
         </Loop>
       </PopIn>
     </IllustrationSvg>

@@ -26,31 +26,30 @@ src/
 
 ## Estilo visual de las ilustraciones
 
-**Línea continua tipo boceto a mano** (no muñecos de palo con cabeza-círculo).
-Cada ilustración es un `<svg viewBox="0 0 220 220">` con trazos de curvas
-Bézier suaves, sin relleno (salvo acentos puntuales en terracota `#b5542c`),
-grosor de trazo uniforme (`.ink-line`, 2.4px), y un filtro SVG
-(`feTurbulence` + `feDisplacementMap`) aplicado a todo el grupo para que las
-líneas se vean ligeramente imperfectas, como tinta a mano.
+**Muñecos de palo clásicos** (migrado en 2026-08 desde el estilo anterior de
+línea continua, que era difícil de proporcionar bien): cabeza-círculo de
+r=10, torso de un trazo recto, extremidades de polilíneas rectas con
+articulaciones (hombro→codo→mano, cadera→rodilla→pie→punta). Los props
+(castillo, paraguas, secadora...) siguen siendo paths dibujados a mano.
+Todo dentro de un `<svg viewBox="0 0 220 220">`, sin relleno (salvo acentos
+puntuales en terracota `#b5542c`), grosor de trazo uniforme (`.ink-line`,
+2.4px), y el filtro SVG (`feTurbulence` + `feDisplacementMap`) aplicado a
+todo el grupo para que las líneas rectas conserven el aire de tinta a mano.
 
-Cada ilustración se construye a mano, coordenada por coordenada — no hay un
-generador paramétrico de figuras. Esto da control artístico pero significa
-que la calidad varía según cuánto se iteró cada una visualmente antes de
-darla por buena (ver "Estado de calidad" abajo).
+Las figuras se declaran con el componente `StickFigure` de
+`primitives.tsx` (coordenadas de articulaciones por parte, cada parte
+opcional para poder animar un brazo/pierna aparte con su propio `Loop`) o,
+para poses no estándar (sentado, reclinado, abrazo), con el helper `line()`
+que convierte una lista de puntos en el `d` de una polilínea.
 
-### ¿Otro estilo es posible?
-
-Sí. El estilo alternativo de referencia (muñecos de palo simples: cabeza-
-círculo, un solo trazo recto para el torso, extremidades rectas, sin
-curvas Bézier) es **más simple de dibujar de forma consistente** que el
-estilo de línea continua actual, porque las líneas rectas son mucho más
-fáciles de proporcionar bien que las curvas orgánicas — el estilo actual
-requirió varias iteraciones por ilustración (ver ejemplo de `Dog.tsx`, que
-necesitó 5 intentos) para que las proporciones no se vieran raras.
-Si la prioridad es consistencia y "que nada se vea mal" por encima de la
-calidez del trazo a mano, migrar a muñecos de líneas rectas es una opción
-real y probablemente más rápida de ejecutar bien en las 31 escenas.
-Pendiente de decisión — no implementado.
+Reglas que mantienen la consistencia entre las 31 escenas:
+- proporciones estándar: cabeza r=10 (r=9 secundarias), torso ~36px,
+  brazo ~2 segmentos de ~15px, pierna ~2 segmentos de ~20px + punta de pie
+- los objetos que se sostienen deben tocar la mano (el hilo de la cometa
+  termina en la mano, el bastón pasa por la mano, la regadera cuelga de
+  ella) — nada de props flotando sin conexión
+- casi todas las escenas llevan una línea de suelo tenue (`opacity 0.4`)
+  para que las figuras no floten
 
 ## Sistema de animación (`src/illustrations/primitives.tsx`)
 
@@ -61,6 +60,8 @@ el dibujo ya completo) y los loops ambientales no se ejecutan.
 | Primitivo | Qué hace | Uso típico |
 |---|---|---|
 | `IllustrationSvg` | Envuelve el `<svg>`: aplica el filtro de textura a mano + una deriva ambiental lenta (flotar/rotar muy sutil) a toda la escena | Wrapper raíz de cada ilustración |
+| `StickFigure` | Muñeco de palo desde coordenadas de articulaciones (cabeza + torso/brazos/piernas opcionales) | Toda figura humana; omitir una parte para animarla aparte |
+| `line(...pts)` | Convierte una lista de puntos en el `d` de una polilínea recta | Poses no estándar y extremidades animadas por separado |
 | `DrawPath` | Un `<path>` que se dibuja solo (`pathLength` de 0→1) | Entrada principal de contornos — el trazo "se dibuja en vivo" |
 | `PopIn` | Grupo que aparece con fade + escala + un pequeño ascenso, resorte | Envuelve secciones de la escena con delays escalonados |
 | `Loop` | Animación ambiental infinita, con `kind`: `float` `sway` `walk` `spin` `pulse` `twinkle` `drop` `wag` `steam` `flame` `flap` `zz` `fall` `breathe` | Movimiento continuo (flores que se mecen, cola que menea, vapor, lluvia, respiración...) |
@@ -88,52 +89,51 @@ Patrón típico de un archivo de ilustración:
 | # | Frase | Archivo | Escena | Loop(s) de movimiento |
 |---|---|---|---|---|
 | 01 | Lee. | `Reading.tsx` | Persona subiendo una escalera apoyada en un libro gigante | `walk` (subir) |
-| 02 | Compra flores. | `Flowers.tsx` | Persona sentada en una mesa de café con un jarrón de flores | `sway` (flores) |
+| 02 | Compra flores. | `Flowers.tsx` | Persona alcanzando el jarrón de flores de un puesto | `sway` (flores) |
 | 03 | Trata de llegar. | `Castle.tsx` | Viajero con bastón acercándose a un castillo en una colina | `walk` |
-| 04 | Programa un plan realista. | `HairDryer.tsx` | Persona de pelo alborotado secándoselo con una secadora | `sway` (mechones) — **señalada por el usuario como que se ve mal** |
+| 04 | Programa un plan realista. | `HairDryer.tsx` | Persona de pelo alborotado secándoselo con una secadora | `sway` (mechones), `twinkle` (aire) |
 | 05 | No te compares con los demás. | `Fruits.tsx` | Una naranja y una manzana, cada una leyendo su periódico | `sway` (hojita) |
 | 06 | Vive el momento. | `Balance.tsx` | Funambulista en equilibrio entre carteles PASADO / FUTURO | `sway` |
 | 07 | Toma el sol. | `Sunbathing.tsx` | Persona reclinada en una tumbona bajo un sol que gira | `spin` (sol), `breathe` (persona) |
 | 08 | Baila en la cocina. | `KitchenDance.tsx` | Persona bailando junto a la estufa, notas musicales flotando | `walk`, `float` (notas) |
-| 09 | Llama a quien extrañas. | `PhoneCall.tsx` | Dos personas al teléfono, un corazón late entre ellas | `pulse` (corazón) |
-| 10 | Acaricia a un perro. | `Dog.tsx` | Perro sentado + una mano que baja a acariciarlo | `wag` (cola) |
+| 09 | Llama a quien extrañas. | `PhoneCall.tsx` | Dos personas al teléfono, un corazón late entre ellas | `pulse` (corazón), `breathe` |
+| 10 | Acaricia a un perro. | `Dog.tsx` | Persona en cuclillas acariciando a un perro | `wag` (cola), `sway` (brazo que acaricia) |
 | 11 | Escucha la lluvia. | `Umbrella.tsx` | Persona bajo un paraguas mientras cae la lluvia | `drop` (gotas) |
-| 12 | Planta algo. | `Planting.tsx` | Maceta con una planta que crece, regada con una regadera | `GrowIn` (tallo), `drop` (agua) |
+| 12 | Planta algo. | `Planting.tsx` | Persona regando la maceta donde crece la planta | `GrowIn` (tallo), `sway` (regadera), `drop` (agua) |
 | 13 | Camina sin rumbo. | `Walking.tsx` | Caminante solitario por un sendero, junto a un letrero | `walk`, `spin` (sol) |
 | 14 | Ríete de ti. | `Mirror.tsx` | Persona riéndose frente a su reflejo en un espejo | `walk`, `breathe` (reflejo), `float` ("ja ja") |
 | 15 | Anota lo bueno de hoy. | `Journal.tsx` | Diario abierto que se va llenando de escritura | `WriteLoop`, `twinkle` |
-| 16 | Mira las estrellas. | `Telescope.tsx` | Persona observando el cielo por un telescopio | `twinkle` (estrellas) |
-| 17 | Comparte tu pan. | `Bread.tsx` | Dos personas compartiendo una hogaza de pan | `float` (pan) |
+| 16 | Mira las estrellas. | `Telescope.tsx` | Persona observando el cielo por un telescopio en trípode | `twinkle` (estrellas), `breathe` |
+| 17 | Comparte tu pan. | `Bread.tsx` | Dos personas sosteniendo juntas una hogaza de pan | `breathe` (pan), `twinkle` |
 | 18 | Duerme lo suficiente. | `Sleep.tsx` | Persona dormida en la cama bajo una luna creciente | `zz`, `float` (luna) |
 | 19 | Canta en el coche. | `CarSinging.tsx` | Persona cantando al volante, ventanas abajo | `walk`, `float` (notas) |
-| 20 | Aprende algo inútil. | `Juggling.tsx` | Persona haciendo malabares con tres pelotas | `float` (pelotas) |
+| 20 | Aprende algo inútil. | `Juggling.tsx` | Persona haciendo malabares con tres pelotas | `float` (pelotas), `walk` |
 | 21 | Abraza fuerte. | `Hug.tsx` | Dos personas en un abrazo apretado | `breathe`, `pulse` (corazón) |
 | 22 | Vuelve a intentarlo. | `Kite.tsx` | Persona remontando una cometa que vuelve a subir | `float` (cometa) |
 | 23 | Da las gracias. | `ThankYouCard.tsx` | Tarjeta de agradecimiento con un corazón como sello | `pulse` (corazón) |
 | 24 | Come despacio. | `Ramen.tsx` | Un tazón de ramen humeante, listo para disfrutarse despacio | `steam` |
 | 25 | Regálate silencio. | `Meditation.tsx` | Persona meditando dentro de anillos de respiración | `breathe` |
 | 26 | Celebra lo pequeño. | `BirthdayCake.tsx` | Un pastelito con una vela encendida | `flame`, `twinkle` (confeti) |
-| 27 | Pide ayuda. | `HelpingHand.tsx` | Una persona ayuda a otra a salir de un pozo | `walk`, `pulse` (manos) |
+| 27 | Pide ayuda. | `HelpingHand.tsx` | Una persona arrodillada ayuda a otra a salir de un pozo | `walk`, `pulse` (manos) |
 | 28 | Suelta lo que pesa. | `Balloons.tsx` | Persona soltando globos que se alejan flotando | `float` (globos) |
-| 29 | Haz una pausa. | `TreeRest.tsx` | Persona descansando en una banca bajo un árbol | `fall` (hojas) |
+| 29 | Haz una pausa. | `TreeRest.tsx` | Persona sentada en una banca bajo un árbol | `fall` (hojas), `breathe` |
 | 30 | Confía en el proceso. | `Butterfly.tsx` | Rastro de una oruga que se transforma en mariposa | `walk` (oruga), `flap` (alas) |
 | 31 | Empieza hoy. | `Sunrise.tsx` | El sol saliendo sobre el horizonte | `float` (sol, aves) |
 
-## Estado de calidad — pendiente de revisión
+## Estado de calidad
 
-El estilo de línea continua es más difícil de acertar a la primera que un
-ícono geométrico simple: cada ilustración se armó a mano y se revisó con
-capturas de pantalla en lote antes de darla por buena, pero **no todas
-recibieron el mismo número de iteraciones**, así que la calidad no es
-pareja. Señalado explícitamente por el usuario:
+2026-08: se migraron las 24 escenas con figuras humanas al estilo de
+muñecos de palo (ver arriba) y se arreglaron los trazos sin sentido que
+había: la secadora que tapaba la cara en `HairDryer` (reporte del usuario
+— resuelto), la mano sin cuerpo en `Dog`, la regadera flotando en
+`Planting`, el paraguas que nadie sostenía en `Umbrella`, el hilo de la
+cometa que no llegaba a la mano en `Kite`, y el pozo con la abertura
+cruzada en `HelpingHand`. Las 31 páginas se verificaron con capturas del
+libro real tras el rediseño.
 
-- [ ] **`HairDryer.tsx` (página 04)** — el usuario reportó que se ve mal
-      (los mechones de pelo alborotado se ven como garabato suelto, la
-      figura se ve frágil/desproporcionada). Pendiente de rehacer.
-
-Si encuentras otra página que se vea mal, agrégala a esta lista con el
-número de página y qué se ve mal específicamente (no solo "se ve feo") —
-eso es lo que permite arreglarla sin adivinar.
+Si encuentras una página que se vea mal, anótala aquí con el número de
+página y qué se ve mal específicamente (no solo "se ve feo") — eso es lo
+que permite arreglarla sin adivinar.
 
 ## Cómo iterar una ilustración sin perder tiempo
 

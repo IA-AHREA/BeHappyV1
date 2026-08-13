@@ -1,29 +1,43 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Llama a quien extrañas." — two continuous-line figures on a call, a heart pulsing between them. */
+/** "Llama a quien extrañas." — dos muñecos de palo al teléfono, un corazón late entre ellos. */
 export default function PhoneCall() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath duration={1} d="M50 90 C42 89 36 95 36 103 C36 109 40 113 46 115 C40 122 36 132 38 144 C39 152 43 158 49 162" />
-        <path className="ink-line" d="M50 90 C58 90 63 95 62 101 C61 106 57 109 53 110" />
-        <path className="ink-line" d="M49 162 C51 172 49 182 44 190" />
-        <path className="ink-line" d="M49 162 C56 168 60 178 57 190" />
-        <path className="ink-line" d="M46 115 C56 112 64 108 68 102" />
+        <Loop kind="breathe" style={{ transformOrigin: '52px 178px' }}>
+          <StickFigure
+            head={[52, 96]}
+            torso={[[52, 106], [52, 142]]}
+            armR={[[52, 114], [66, 122], [61, 102]]}
+            armL={[[52, 114], [46, 128], [44, 140]]}
+            legL={[[52, 142], [46, 160], [44, 178], [38, 178]]}
+            legR={[[52, 142], [58, 160], [60, 178], [66, 178]]}
+          />
+          <path className="ink-line" strokeWidth={5} d="M58 96 l8 6" />
+        </Loop>
       </PopIn>
       <PopIn delay={0.3}>
-        <DrawPath duration={1} d="M168 90 C176 89 182 95 182 103 C182 109 178 113 172 115" />
-        <path className="ink-line" d="M168 90 C160 90 155 95 156 101 C157 106 161 109 165 110" />
-        <path className="ink-line" d="M172 115 C178 122 182 132 180 144 C179 152 175 158 169 162" />
-        <path className="ink-line" d="M169 162 C167 172 169 182 174 190" />
-        <path className="ink-line" d="M169 162 C162 168 158 178 161 190" />
-        <path className="ink-line" d="M172 115 C162 112 154 108 150 102" />
+        <Loop kind="breathe" delay={0.5} style={{ transformOrigin: '168px 178px' }}>
+          <StickFigure
+            head={[168, 96]}
+            torso={[[168, 106], [168, 142]]}
+            armL={[[168, 114], [154, 122], [159, 102]]}
+            armR={[[168, 114], [174, 128], [176, 140]]}
+            legR={[[168, 142], [174, 160], [176, 178], [182, 178]]}
+            legL={[[168, 142], [162, 160], [160, 178], [154, 178]]}
+          />
+          <path className="ink-line" strokeWidth={5} d="M162 96 l-8 6" />
+        </Loop>
       </PopIn>
       <PopIn delay={0.7}>
-        <path className="ink-line" opacity={0.5} strokeDasharray="4 5" d="M70 100 Q90 88 108 100" />
-        <Loop kind="pulse" style={{ transformOrigin: '109px 110px' }}>
-          <path className="ink-line" d="M109 92 C100 82 84 88 84 100 C84 112 100 122 109 128 C118 122 134 112 134 100 C134 88 118 82 109 92 Z" />
+        <path className="ink-line" opacity={0.5} strokeDasharray="4 5" d="M70 92 Q110 74 150 92" />
+        <Loop kind="pulse" style={{ transformOrigin: '110px 112px' }}>
+          <path className="ink-line" d="M110 100 C101 92 88 98 88 108 C88 118 101 127 110 133 C119 127 132 118 132 108 C132 98 119 92 110 100 Z" />
         </Loop>
+      </PopIn>
+      <PopIn delay={0.5}>
+        <path className="ink-line" opacity={0.4} d="M30 182 H190" />
       </PopIn>
     </IllustrationSvg>
   );

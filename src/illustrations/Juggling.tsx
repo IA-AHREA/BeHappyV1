@@ -1,17 +1,21 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Aprende algo inútil." — a continuous-line figure juggling three balls just for the joy of it. */
+/** "Aprende algo inútil." — un muñeco de palo hace malabares con tres pelotas. */
 export default function Juggling() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath duration={1} d="M110 92 C102 91 96 97 96 105 C96 111 100 115 106 117" />
-        <path className="ink-line" d="M110 92 C118 91 124 97 122 103 C121 108 117 112 112 113" />
-        <path className="ink-line" d="M106 117 C100 124 96 134 98 146 C99 154 103 160 109 164" />
-        <path className="ink-line" d="M109 164 C111 174 109 184 104 192" />
-        <path className="ink-line" d="M109 164 C116 170 120 180 117 192" />
-        <path className="ink-line" d="M106 117 C96 110 88 100 84 88" />
-        <path className="ink-line" d="M112 113 C122 106 130 96 134 84" />
+        <Loop kind="walk">
+          <StickFigure
+            head={[110, 96]}
+            torso={[[110, 106], [110, 142]]}
+            armL={[[110, 114], [94, 120], [86, 106]]}
+            armR={[[110, 114], [126, 120], [134, 106]]}
+            legL={[[110, 142], [103, 160], [101, 180], [95, 180]]}
+            legR={[[110, 142], [117, 160], [119, 180], [125, 180]]}
+          />
+        </Loop>
+        <path className="ink-line" opacity={0.4} d="M70 184 H150" />
       </PopIn>
       <PopIn delay={0.4}>
         <Loop kind="float">

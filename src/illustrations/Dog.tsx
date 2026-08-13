@@ -1,24 +1,34 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { IllustrationSvg, Loop, PopIn, StickFigure, line } from './primitives';
 
-/** "Acaricia a un perro." — a continuous-line dog, tail wagging, greeted by a hand. */
+/** "Acaricia a un perro." — un muñeco de palo en cuclillas acaricia al perro; la cola menea. */
 export default function Dog() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath duration={1.1} d="M92 172 m -38 0 a 38 26 0 1 0 76 0 a 38 26 0 1 0 -76 0" />
-        <DrawPath duration={0.8} delay={0.3} d="M128 138 m -19 0 a 19 19 0 1 0 38 0 a 19 19 0 1 0 -38 0" />
-        <path className="ink-line" d="M122 124 C112 120 104 126 106 136 C108 144 116 146 122 142 Z" />
-        <path className="ink-line" d="M144 144 C152 144 155 150 152 156 C149 161 143 161 139 157" />
-        <circle cx={134} cy={134} r={1.8} fill="#2b2a28" />
-        <path className="ink-line" d="M140 157 C134 159 130 157 128 152" />
-        <Loop kind="wag" style={{ transformOrigin: '52px 151px' }}>
-          <path className="ink-line" d="M56 162 C46 156 44 146 50 140" />
+        <ellipse className="ink-line" cx={146} cy={166} rx={30} ry={17} />
+        <circle className="ink-line" cx={113} cy={137} r={13} />
+        <path className="ink-line" d="M110 125 l-5 -13 l11 5" />
+        <circle cx={107} cy={136} r={1.8} fill="#2b2a28" />
+        <path className="ink-line" d="M101 143 q4 3 8 1" />
+        <path className="ink-line" d="M130 182 V196 M158 182 V196" />
+        <Loop kind="wag" style={{ transformOrigin: '172px 161px' }}>
+          <path className="ink-line" d="M172 160 q14 -4 12 -18" />
         </Loop>
-        <path className="ink-line" d="M72 196 L70 210 M92 198 L94 212" />
       </PopIn>
-      <PopIn delay={0.6}>
-        <DrawPath duration={0.7} d="M92 40 C104 46 114 58 119 72 C123 84 126 96 128 110" />
-        <path className="ink-line" opacity={0.5} d="M76 38 l10 10 M92 28 l6 12 M108 30 l0 12" />
+      <PopIn delay={0.5}>
+        <StickFigure
+          head={[50, 112]}
+          torso={[[50, 122], [54, 152]]}
+          armL={[[52, 130], [44, 144], [46, 154]]}
+          legR={[[54, 152], [72, 164], [66, 182], [74, 183]]}
+          legL={[[54, 152], [46, 168], [42, 184], [50, 185]]}
+        />
+        <Loop kind="sway" style={{ transformOrigin: '52px 130px' }}>
+          <path className="ink-line" d={line([52, 130], [76, 136], [98, 130])} />
+        </Loop>
+      </PopIn>
+      <PopIn delay={0.7}>
+        <path className="ink-line" opacity={0.4} d="M28 188 H200" />
       </PopIn>
     </IllustrationSvg>
   );

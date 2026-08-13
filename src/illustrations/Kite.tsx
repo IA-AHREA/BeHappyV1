@@ -1,6 +1,6 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { DrawPath, IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Vuelve a intentarlo." — a continuous-line figure flying a kite that climbs again. */
+/** "Vuelve a intentarlo." — un muñeco de palo remonta la cometa; el hilo llega hasta su mano. */
 export default function Kite() {
   return (
     <IllustrationSvg>
@@ -13,15 +13,18 @@ export default function Kite() {
         </Loop>
       </PopIn>
       <PopIn delay={0.5}>
-        <path className="ink-line" opacity={0.5} d="M148 92 Q110 130 76 132" />
+        <path className="ink-line" opacity={0.5} d="M148 92 Q120 114 90 120" />
       </PopIn>
       <PopIn delay={0.7}>
-        <DrawPath duration={1} d="M64 112 C56 111 50 117 50 125 C50 131 54 135 60 137" />
-        <path className="ink-line" d="M64 112 C72 111 78 117 76 123 C75 128 71 132 66 133" />
-        <path className="ink-line" d="M60 137 C54 144 50 154 52 166 C53 174 57 180 63 184" />
-        <path className="ink-line" d="M63 184 C65 192 63 200 58 206" />
-        <path className="ink-line" d="M63 184 C70 190 74 198 71 206" />
-        <path className="ink-line" d="M60 137 C68 132 74 126 76 132" />
+        <StickFigure
+          head={[64, 120]}
+          torso={[[64, 130], [64, 166]]}
+          armR={[[64, 138], [78, 130], [88, 120]]}
+          armL={[[64, 138], [56, 152], [54, 164]]}
+          legL={[[64, 166], [58, 182], [56, 200], [50, 200]]}
+          legR={[[64, 166], [70, 182], [72, 200], [78, 200]]}
+        />
+        <path className="ink-line" opacity={0.4} d="M30 204 H120" />
       </PopIn>
     </IllustrationSvg>
   );

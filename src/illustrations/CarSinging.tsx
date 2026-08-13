@@ -15,11 +15,10 @@ export default function CarSinging() {
       </PopIn>
       <PopIn delay={0.6}>
         <Loop kind="walk">
-          <DrawPath duration={0.6} d="M94 136 m -9 0 a 9 9 0 1 0 18 0 a 9 9 0 1 0 -18 0" />
-          <path className="ink-line" d="M100 128 C104 122 104 116 100 112" />
-          <path className="ink-line" d="M85 140 C88 144 96 144 99 140" />
-          <path className="ink-line" opacity={0.5} d="M108 118 Q94 106 82 112" />
-          <path className="ink-line" opacity={0.5} d="M108 124 Q94 130 84 122" />
+          <DrawPath duration={0.6} d="M94 132 m -9 0 a 9 9 0 1 0 18 0 a 9 9 0 1 0 -18 0" />
+          <path className="ink-line" opacity={0.7} d="M89 130 q3 2.5 6 0" />
+          <circle cx={99} cy={135} r={2.2} fill="#2b2a28" />
+          <path className="ink-line" opacity={0.5} d="M106 124 q9 -2 12 -9 M105 130 q11 1 15 -4" />
         </Loop>
       </PopIn>
       <PopIn delay={0.5}>

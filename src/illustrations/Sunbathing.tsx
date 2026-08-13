@@ -1,6 +1,6 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { IllustrationSvg, Loop, PopIn, line } from './primitives';
 
-/** "Toma el sol." — a continuous-line figure reclining on a lounger under a spinning sun. */
+/** "Toma el sol." — un muñeco de palo reclinado en la tumbona, manos tras la cabeza. */
 export default function Sunbathing() {
   return (
     <IllustrationSvg>
@@ -15,19 +15,17 @@ export default function Sunbathing() {
         <circle className="ink-line" cx={110} cy={50} r={16} />
       </PopIn>
       <PopIn delay={0.4}>
-        <path className="ink-line" opacity={0.4} d="M28 176 L58 138 H158 L172 176" />
-        <path className="ink-line" opacity={0.4} d="M40 176 V192 M160 176 V192" />
+        <path className="ink-line" opacity={0.7} d="M52 120 L80 148 L170 148" />
+        <path className="ink-line" opacity={0.7} d="M92 148 L88 170 M156 148 L160 170" />
+        <path className="ink-line" opacity={0.4} d="M44 174 H186" />
       </PopIn>
       <PopIn delay={0.6}>
-        <Loop kind="breathe" style={{ transformOrigin: '90px 130px' }}>
-          <DrawPath
-            duration={1.2}
-            d="M60 128 C52 126 46 120 46 112 C46 105 51 100 58 100 C65 100 70 105 70 112 C70 118 66 124 60 128"
-          />
-          <path className="ink-line" d="M60 128 C76 132 92 133 106 132" />
-          <path className="ink-line" d="M106 132 C118 132 126 128 130 120" />
-          <path className="ink-line" d="M130 120 C136 124 142 126 150 126" />
-          <path className="ink-line" d="M78 130 C82 138 82 146 78 152" />
+        <Loop kind="breathe" style={{ transformOrigin: '105px 135px' }}>
+          <circle className="ink-line" cx={68} cy={122} r={10} />
+          <path className="ink-line" d={line([76, 129], [108, 144])} />
+          <path className="ink-line" d={line([82, 132], [76, 113], [63, 116])} />
+          <path className="ink-line" d={line([108, 144], [130, 134], [148, 144])} />
+          <path className="ink-line" d={line([108, 144], [134, 140], [152, 148])} />
         </Loop>
       </PopIn>
     </IllustrationSvg>

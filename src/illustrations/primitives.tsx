@@ -30,6 +30,40 @@ export function IllustrationSvg({ children }: { children: ReactNode }) {
   );
 }
 
+export type Pt = readonly [number, number];
+
+/** Path data de una polilínea recta a partir de articulaciones — trazos de muñeco de palo. */
+export const line = (...pts: Pt[]) => 'M ' + pts.map((p) => p.join(' ')).join(' L ');
+
+interface StickFigureProps {
+  head: Pt;
+  r?: number;
+  torso?: Pt[];
+  armL?: Pt[];
+  armR?: Pt[];
+  legL?: Pt[];
+  legR?: Pt[];
+}
+
+/**
+ * Muñeco de palo estándar: cabeza-círculo (r=10) + torso y extremidades de líneas rectas,
+ * al estilo de los stick figures clásicos. Cada parte es una polilínea de articulaciones
+ * (hombro→codo→mano, cadera→rodilla→pie→punta). Las partes son opcionales para que una
+ * escena pueda dibujar un brazo o pierna aparte y animarlo con su propio Loop.
+ */
+export function StickFigure({ head, r = 10, torso, armL, armR, legL, legR }: StickFigureProps) {
+  return (
+    <>
+      <circle className="ink-line" cx={head[0]} cy={head[1]} r={r} />
+      {[torso, armL, armR, legL, legR]
+        .filter((part): part is Pt[] => !!part)
+        .map((part, i) => (
+          <path key={i} className="ink-line" d={line(...part)} />
+        ))}
+    </>
+  );
+}
+
 interface DrawPathProps {
   d: string;
   delay?: number;

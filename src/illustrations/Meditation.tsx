@@ -1,6 +1,6 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn } from './primitives';
+import { IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Regálate silencio." — a continuous-line figure meditating inside soft breathing rings. */
+/** "Regálate silencio." — un muñeco de palo medita con las piernas cruzadas entre anillos. */
 export default function Meditation() {
   return (
     <IllustrationSvg>
@@ -13,15 +13,15 @@ export default function Meditation() {
         </Loop>
       </PopIn>
       <PopIn delay={0.4}>
-        <Loop kind="breathe" style={{ transformOrigin: '110px 112px' }}>
-          <DrawPath duration={1} d="M110 84 C100 83 92 91 92 101 C92 109 97 115 105 117" />
-          <path className="ink-line" d="M110 84 C120 83 128 91 128 101 C128 109 123 115 115 117" />
-          <path className="ink-line" d="M105 117 C96 122 90 130 90 140" />
-          <path className="ink-line" d="M115 117 C124 122 130 130 130 140" />
-          <path className="ink-line" d="M90 140 C74 148 66 150 54 148" />
-          <path className="ink-line" d="M130 140 C146 148 154 150 166 148" />
-          <path className="ink-line" d="M54 148 C60 154 70 156 78 152" />
-          <path className="ink-line" d="M166 148 C160 154 150 156 142 152" />
+        <Loop kind="breathe" style={{ transformOrigin: '110px 130px' }}>
+          <StickFigure
+            head={[110, 86]}
+            torso={[[110, 96], [110, 130]]}
+            armL={[[110, 104], [96, 118], [87, 130]]}
+            armR={[[110, 104], [124, 118], [133, 130]]}
+            legL={[[110, 130], [86, 138], [112, 148]]}
+            legR={[[110, 130], [134, 138], [108, 148]]}
+          />
         </Loop>
       </PopIn>
     </IllustrationSvg>
