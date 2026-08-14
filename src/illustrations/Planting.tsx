@@ -1,17 +1,20 @@
 import { DrawPath, GrowIn, IllustrationSvg, Loop, PopIn, StickFigure, line } from './primitives';
 
-/** "Planta algo." — un muñeco de palo riega la maceta donde crece la planta. */
+/** "Planta algo." — maceta frondosa con platito; un muñeco de palo la riega. */
 export default function Planting() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <DrawPath duration={0.9} d="M76 150 H144 L134 194 H86 Z" />
-        <path className="ink-line" opacity={0.5} d="M84 158 L78 186 M100 158 L96 190 M120 158 L124 190 M136 158 L142 186" />
+        <DrawPath duration={0.9} d="M84 148 H136 L130 186 H90 Z" />
+        <path className="ink-line" opacity={0.5} d="M78 190 H142 M82 190 q28 8 56 0" />
+        <path className="ink-line" opacity={0.4} d="M92 156 L88 182 M110 156 L110 184 M128 156 L132 182" />
       </PopIn>
-      <GrowIn style={{ transformOrigin: '110px 150px' }}>
-        <path className="ink-line" d="M110 150 C108 122 110 96 110 74" />
-        <path className="ink-line" d="M110 96 C92 92 86 76 88 60 C106 62 112 80 110 96 Z" />
-        <path className="ink-line" d="M110 84 C128 80 136 64 134 48 C116 50 108 68 110 84 Z" />
+      <GrowIn style={{ transformOrigin: '110px 148px' }}>
+        <path className="ink-line" d="M110 148 C106 120 110 96 108 74" />
+        <path className="ink-line" d="M110 130 C92 126 84 112 86 94 C102 98 112 112 110 130 Z" />
+        <path className="ink-line" d="M109 112 C126 108 134 92 132 76 C116 78 108 94 109 112 Z" />
+        <path className="ink-line" d="M108 90 C96 86 90 76 91 64 C103 68 110 78 108 90 Z" />
+        <path className="ink-line" opacity={0.6} d="M96 148 q-8 10 -18 12 M124 148 q8 10 18 12" />
       </GrowIn>
       <PopIn delay={0.7}>
         <StickFigure

@@ -89,34 +89,34 @@ Patrón típico de un archivo de ilustración:
 | # | Frase | Archivo | Escena | Loop(s) de movimiento |
 |---|---|---|---|---|
 | 01 | Lee. | `Reading.tsx` | Persona subiendo una escalera apoyada en un libro gigante | `walk` (subir) |
-| 02 | Compra flores. | `Flowers.tsx` | Persona alcanzando el jarrón de flores de un puesto | `sway` (flores) |
+| 02 | Compra flores. | `Flowers.tsx` | Persona alcanza el jarrón de rosas sobre una mesa | `sway` (ramo) |
 | 03 | Trata de llegar. | `Castle.tsx` | Viajero con bastón acercándose a un castillo en una colina | `walk` |
-| 04 | Programa un plan realista. | `HairDryer.tsx` | Persona de pelo alborotado secándoselo con una secadora | `sway` (mechones), `twinkle` (aire) |
+| 04 | Programa un plan realista. | `HairDryer.tsx` | Persona secándose el pelo alborotado frente a un espejo de pared | `sway` (mechones), `twinkle` (aire) |
 | 05 | No te compares con los demás. | `Fruits.tsx` | Una naranja y una manzana, cada una leyendo su periódico | `sway` (hojita) |
 | 06 | Vive el momento. | `Balance.tsx` | Funambulista en equilibrio entre carteles PASADO / FUTURO | `sway` |
-| 07 | Toma el sol. | `Sunbathing.tsx` | Persona reclinada en una tumbona bajo un sol que gira | `spin` (sol), `breathe` (persona) |
+| 07 | Toma el sol. | `Sunbathing.tsx` | En la playa: tumbona, gafas de sol, chanclas y el mar de fondo | `spin` (sol), `breathe` (persona y mar) |
 | 08 | Baila en la cocina. | `KitchenDance.tsx` | Persona bailando junto a la estufa, notas musicales flotando | `walk`, `float` (notas) |
 | 09 | Llama a quien extrañas. | `PhoneCall.tsx` | Dos personas al teléfono, un corazón late entre ellas | `pulse` (corazón), `breathe` |
-| 10 | Acaricia a un perro. | `Dog.tsx` | Persona en cuclillas acariciando a un perro | `wag` (cola), `sway` (brazo que acaricia) |
+| 10 | Acaricia a un perro. | `Dog.tsx` | Persona arrodillada le ofrece un hueso al perro (correa floja, collar) | `wag` (cola), `sway` (brazo con el hueso) |
 | 11 | Escucha la lluvia. | `Umbrella.tsx` | Persona bajo un paraguas mientras cae la lluvia | `drop` (gotas) |
-| 12 | Planta algo. | `Planting.tsx` | Persona regando la maceta donde crece la planta | `GrowIn` (tallo), `sway` (regadera), `drop` (agua) |
+| 12 | Planta algo. | `Planting.tsx` | Persona riega una maceta frondosa con platito | `GrowIn` (follaje), `sway` (regadera), `drop` (agua) |
 | 13 | Camina sin rumbo. | `Walking.tsx` | Caminante solitario por un sendero, junto a un letrero | `walk`, `spin` (sol) |
 | 14 | Ríete de ti. | `Mirror.tsx` | Persona riéndose frente a su reflejo en un espejo | `walk`, `breathe` (reflejo), `float` ("ja ja") |
 | 15 | Anota lo bueno de hoy. | `Journal.tsx` | Diario abierto que se va llenando de escritura | `WriteLoop`, `twinkle` |
-| 16 | Mira las estrellas. | `Telescope.tsx` | Persona observando el cielo por un telescopio en trípode | `twinkle` (estrellas), `breathe` |
-| 17 | Comparte tu pan. | `Bread.tsx` | Dos personas sosteniendo juntas una hogaza de pan | `breathe` (pan), `twinkle` |
-| 18 | Duerme lo suficiente. | `Sleep.tsx` | Persona dormida en la cama bajo una luna creciente | `zz`, `float` (luna) |
-| 19 | Canta en el coche. | `CarSinging.tsx` | Persona cantando al volante, ventanas abajo | `walk`, `float` (notas) |
-| 20 | Aprende algo inútil. | `Juggling.tsx` | Persona haciendo malabares con tres pelotas | `float` (pelotas), `walk` |
-| 21 | Abraza fuerte. | `Hug.tsx` | Dos personas en un abrazo apretado | `breathe`, `pulse` (corazón) |
-| 22 | Vuelve a intentarlo. | `Kite.tsx` | Persona remontando una cometa que vuelve a subir | `float` (cometa) |
+| 16 | Mira las estrellas. | `Telescope.tsx` | Telescopio en trípode bajo una constelación, entre pinos y colinas | `twinkle` (estrellas), `breathe` |
+| 17 | Comparte tu pan. | `Bread.tsx` | Dos personas comparten la hogaza bajo un arco | `breathe` (pan), `twinkle` |
+| 18 | Duerme lo suficiente. | `Sleep.tsx` | Dormido en la cama; por la ventana, luna y estrellas | `zz`, `twinkle` (estrellas) |
+| 19 | Canta en el coche. | `CarSinging.tsx` | Cantando al volante; oleada de notas, ciudad al fondo | `walk`, `float` (notas) |
+| 20 | Aprende algo inútil. | `Juggling.tsx` | Malabarista en un escenario con telones | `float` (pelotas), `walk`, `sway` (telones) |
+| 21 | Abraza fuerte. | `Hug.tsx` | Pareja abrazada en el sofá; mesita con dos tazas | `breathe`, `pulse` (corazón), `steam` (tazas) |
+| 22 | Vuelve a intentarlo. | `Kite.tsx` | Remontando la cometa de lazos en el campo (cerca, árbol, pasto) | `float` (cometa), `sway` (árbol) |
 | 23 | Da las gracias. | `ThankYouCard.tsx` | Tarjeta de agradecimiento con un corazón como sello | `pulse` (corazón) |
 | 24 | Come despacio. | `Ramen.tsx` | Un tazón de ramen humeante, listo para disfrutarse despacio | `steam` |
-| 25 | Regálate silencio. | `Meditation.tsx` | Persona meditando dentro de anillos de respiración | `breathe` |
+| 25 | Regálate silencio. | `Meditation.tsx` | Meditando sobre un tapete, dentro de un mandala punteado | `breathe`, `spin` (mandala) |
 | 26 | Celebra lo pequeño. | `BirthdayCake.tsx` | Un pastelito con una vela encendida | `flame`, `twinkle` (confeti) |
-| 27 | Pide ayuda. | `HelpingHand.tsx` | Una persona arrodillada ayuda a otra a salir de un pozo | `walk`, `pulse` (manos) |
-| 28 | Suelta lo que pesa. | `Balloons.tsx` | Persona soltando globos que se alejan flotando | `float` (globos) |
-| 29 | Haz una pausa. | `TreeRest.tsx` | Persona sentada en una banca bajo un árbol | `fall` (hojas), `breathe` |
+| 27 | Pide ayuda. | `HelpingHand.tsx` | Desde el borde del pozo, una figura saca a la otra con una cuerda | `walk`, `pulse` (manos) |
+| 28 | Suelta lo que pesa. | `Balloons.tsx` | En el parque, dos globos ya se alejan; el último aún en la mano | `float`/`sway` (globos), `sway` (árboles) |
+| 29 | Haz una pausa. | `TreeRest.tsx` | Leyendo en la banca bajo el árbol; flores al lado | `fall` (hojas), `breathe`, `sway` (flores) |
 | 30 | Confía en el proceso. | `Butterfly.tsx` | Rastro de una oruga que se transforma en mariposa | `walk` (oruga), `flap` (alas) |
 | 31 | Empieza hoy. | `Sunrise.tsx` | El sol saliendo sobre el horizonte | `float` (sol, aves) |
 
@@ -130,6 +130,12 @@ había: la secadora que tapaba la cara en `HairDryer` (reporte del usuario
 cometa que no llegaba a la mano en `Kite`, y el pozo con la abertura
 cruzada en `HelpingHand`. Las 31 páginas se verificaron con capturas del
 libro real tras el rediseño.
+
+2026-08 (rama de escenas detalladas): 16 escenas se enriquecieron con
+escenografía según referencias del usuario — espejo, playa, sofá con
+tazas, escenario con telones, constelaciones, ventana con luna, parque,
+campo con cerca, mandala, arco, cuerda de rescate — manteniendo figuras
+de palo, loops ambientales y el filtro de tinta.
 
 Si encuentras una página que se vea mal, anótala aquí con el número de
 página y qué se ve mal específicamente (no solo "se ve feo") — eso es lo

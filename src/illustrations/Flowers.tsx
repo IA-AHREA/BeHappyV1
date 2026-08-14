@@ -1,37 +1,48 @@
 import { DrawPath, IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
 
-/** "Compra flores." — un muñeco de palo alcanza el jarrón de flores del puesto. */
+/** "Compra flores." — un muñeco de palo alcanza el jarrón de rosas sobre la mesa. */
 export default function Flowers() {
   return (
     <IllustrationSvg>
       <PopIn>
-        <StickFigure
-          head={[100, 84]}
-          torso={[[100, 94], [100, 132]]}
-          armR={[[100, 102], [122, 106], [144, 103]]}
-          armL={[[100, 102], [92, 118], [90, 130]]}
-          legL={[[100, 132], [93, 152], [91, 172], [85, 172]]}
-          legR={[[100, 132], [107, 152], [109, 172], [115, 172]]}
-        />
-        <path className="ink-line" opacity={0.4} d="M64 176 H190" />
+        <path className="ink-line" d="M104 146 H200 M108 152 H196" />
+        <path className="ink-line" d="M104 146 L104 152 M200 146 L200 152" />
+        <path className="ink-line" opacity={0.6} d="M114 152 L110 196 M190 152 L194 196 M118 152 L116 194 M186 152 L188 194" />
       </PopIn>
-
       <PopIn delay={0.4}>
-        <DrawPath duration={0.7} d="M 148 104 C 148 98 172 98 172 104 C 172 110 148 110 148 104 Z" />
-        <path className="ink-line" d="M 160 109 L 158 170 M 149 170 h18" />
+        <DrawPath duration={0.8} d="M140 112 C136 124 137 138 146 148 L162 148 C171 138 172 124 168 112 Z" />
+        <path className="ink-line" opacity={0.7} d="M140 112 C140 108 168 108 168 112" />
       </PopIn>
-
       <PopIn delay={0.7}>
-        <Loop kind="sway" style={{ transformOrigin: '163px 101px' }}>
-          <path className="ink-line" d="M 156 82 C 153 87 153 96 157 101 L 169 101 C 173 96 173 87 170 82 Z" />
-          <path className="ink-line" d="M 157 82 C 157 78 169 78 169 82" />
-          <path className="ink-line" d="M 159 82 C 156 70 158 60 155 50" />
-          <path className="ink-line" d="M 163 82 C 163 68 163 56 163 46" />
-          <path className="ink-line" d="M 167 82 C 170 70 168 60 171 50" />
-          <circle className="ink-line" cx={154} cy={47} r={4.5} />
-          <circle className="ink-line" cx={163} cy={42} r={4.5} />
-          <circle className="ink-line" cx={172} cy={47} r={4.5} />
+        <Loop kind="sway" style={{ transformOrigin: '154px 110px' }}>
+          <path
+            className="ink-line"
+            opacity={0.7}
+            d="M148 110 C146 98 148 88 146 80 M154 110 C154 96 154 86 154 76 M160 110 C162 98 160 88 163 80"
+          />
+          <circle className="ink-line" cx={140} cy={74} r={6} />
+          <path className="ink-line" opacity={0.6} d="M137 74 a3 3 0 1 1 3 3" />
+          <circle className="ink-line" cx={154} cy={64} r={6} />
+          <path className="ink-line" opacity={0.6} d="M151 64 a3 3 0 1 1 3 3" />
+          <circle className="ink-line" cx={168} cy={74} r={6} />
+          <path className="ink-line" opacity={0.6} d="M165 74 a3 3 0 1 1 3 3" />
+          <circle className="ink-line" cx={146} cy={88} r={5.5} />
+          <path className="ink-line" opacity={0.6} d="M143.25 88 a2.75 2.75 0 1 1 2.75 2.75" />
+          <circle className="ink-line" cx={163} cy={88} r={5.5} />
+          <path className="ink-line" opacity={0.6} d="M160.25 88 a2.75 2.75 0 1 1 2.75 2.75" />
+          <path className="ink-line" opacity={0.6} d="M147 96 q-10 -2 -13 -10 q9 -1 13 10 z M158 94 q10 -4 12 -12 q-9 0 -12 12 z" />
         </Loop>
+      </PopIn>
+      <PopIn delay={0.5}>
+        <StickFigure
+          head={[74, 106]}
+          torso={[[74, 116], [74, 154]]}
+          armR={[[74, 124], [104, 130], [134, 124]]}
+          armL={[[74, 124], [66, 138], [64, 150]]}
+          legL={[[74, 154], [67, 172], [65, 190], [59, 190]]}
+          legR={[[74, 154], [81, 172], [83, 190], [89, 190]]}
+        />
+        <path className="ink-line" opacity={0.4} d="M40 196 H208" />
       </PopIn>
     </IllustrationSvg>
   );
