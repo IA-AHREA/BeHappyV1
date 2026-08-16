@@ -7,6 +7,7 @@ import Bread from '../illustrations/Bread';
 import Butterfly from '../illustrations/Butterfly';
 import CarSinging from '../illustrations/CarSinging';
 import Castle from '../illustrations/Castle';
+import DeskSpace from '../illustrations/DeskSpace';
 import Dog from '../illustrations/Dog';
 import Flowers from '../illustrations/Flowers';
 import Fruits from '../illustrations/Fruits';
@@ -22,7 +23,6 @@ import Mirror from '../illustrations/Mirror';
 import PhoneCall from '../illustrations/PhoneCall';
 import Planting from '../illustrations/Planting';
 import Ramen from '../illustrations/Ramen';
-import Reading from '../illustrations/Reading';
 import Sleep from '../illustrations/Sleep';
 import Sunbathing from '../illustrations/Sunbathing';
 import Sunrise from '../illustrations/Sunrise';
@@ -39,7 +39,7 @@ export interface BookPage {
 }
 
 export const pages: BookPage[] = [
-  { id: 'lee', phrase: 'Lee', Illustration: Reading },
+  { id: 'espacio', phrase: 'Disfrutar\ntu espacio', Illustration: DeskSpace },
   { id: 'flores', phrase: 'Compra\nflores', Illustration: Flowers },
   { id: 'llegar', phrase: 'Trata\nde llegar', Illustration: Castle },
   { id: 'plan', phrase: 'Programa un\nplan realista', Illustration: HairDryer },
