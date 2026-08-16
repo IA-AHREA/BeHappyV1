@@ -30,6 +30,40 @@ export function IllustrationSvg({ children }: { children: ReactNode }) {
   );
 }
 
+interface ImageIllustrationProps {
+  src: string;
+  alt?: string;
+  children?: ReactNode;
+}
+
+/**
+ * Wraps an imported raster illustration (PNG/JPG) with the same pop-in entrance and slow
+ * ambient drift as IllustrationSvg. `children` is meant to hold an absolutely-positioned
+ * `<svg viewBox="0 0 220 220">` overlay (matching the source art's internal grid) so loose
+ * accents — sparkles, steam, floating dust — can still be animated with Loop/DrawPath on
+ * top of the static image.
+ */
+export function ImageIllustration({ src, alt = '', children }: ImageIllustrationProps) {
+  const reduced = useReducedMotion();
+  return (
+    <motion.div
+      className="relative flex h-full w-full max-w-[290px] items-center justify-center"
+      initial={reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.82 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 220, damping: 18 }}
+    >
+      <motion.div
+        className="relative h-full w-full"
+        animate={reduced ? undefined : { y: [0, -4, 0], rotate: [-0.6, 0.6, -0.6] }}
+        transition={reduced ? undefined : { duration: 6, ease: 'easeInOut', repeat: Infinity }}
+      >
+        <img src={src} alt={alt} className="h-full w-full object-contain" draggable={false} />
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export type Pt = readonly [number, number];
 
 /** Path data de una polilínea recta a partir de articulaciones — trazos de muñeco de palo. */

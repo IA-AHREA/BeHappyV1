@@ -1,32 +1,33 @@
-import { DrawPath, IllustrationSvg, Loop, PopIn, StickFigure } from './primitives';
+import readingImg from '../assets/illustrations/01-lee.png';
+import { ImageIllustration, Loop } from './primitives';
 
-/** "Lee." — un muñeco de palo subiendo una escalera apoyada en un libro gigante. */
+/**
+ * "Lee." — ilustración importada (imagen estática) de una persona sentada leyendo un libro
+ * grande. El swirl de ideas y las chispitas se dibujan encima como acentos animados, no
+ * están horneados en la imagen, para que la escena conserve algo de movimiento.
+ */
 export default function Reading() {
   return (
-    <IllustrationSvg>
-      <PopIn>
-        <DrawPath duration={1.6} d="M120 40 C150 34 178 38 190 48 L190 178 C178 168 150 164 120 170 Z" />
-        <path className="ink-line" opacity={0.55} d="M132 60 h46 M132 74 h40 M132 88 h46 M132 102 h34" />
-        <path className="ink-line" opacity={0.4} d="M110 188 C140 180 170 180 200 188" />
-      </PopIn>
-      <PopIn delay={0.5}>
-        <DrawPath duration={1} delay={0.1} d="M40 195 L96 60" />
-        <DrawPath duration={1} delay={0.25} d="M64 195 L120 60" />
-        <path className="ink-line" opacity={0.5} d="M50 172 l20 -5 M56 152 l20 -5 M62 132 l20 -5 M68 112 l20 -5 M74 92 l20 -5 M80 72 l20 -5" />
-      </PopIn>
-      <PopIn delay={1}>
-        <Loop kind="walk">
-          <StickFigure
-            head={[88, 78]}
-            r={9}
-            torso={[[86, 87], [80, 120]]}
-            armL={[[85, 94], [76, 102], [82, 110]]}
-            armR={[[85, 94], [92, 88], [98, 84]]}
-            legL={[[80, 120], [72, 134], [64, 148]]}
-            legR={[[80, 120], [86, 136], [76, 150]]}
+    <ImageIllustration src={readingImg} alt="">
+      <svg viewBox="0 0 220 220" className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
+        <Loop kind="sway" style={{ transformOrigin: '55px 90px' }}>
+          <path
+            className="ink-line"
+            opacity={0.75}
+            d="M60 95 C50 78 68 65 55 50 C45 38 60 28 50 15"
           />
+          <path className="ink-line" opacity={0.6} d="M50 30 q-6 -2 -6 -8 q0 -5 5 -5 q4 0 4 4" />
         </Loop>
-      </PopIn>
-    </IllustrationSvg>
+        <Loop kind="twinkle">
+          <circle cx={44} cy={55} r={1.6} fill="#2b2a28" />
+        </Loop>
+        <Loop kind="twinkle" delay={0.5}>
+          <circle cx={35} cy={70} r={1.3} fill="#2b2a28" />
+        </Loop>
+        <Loop kind="twinkle" delay={0.9}>
+          <circle cx={60} cy={20} r={1.4} fill="#b5542c" />
+        </Loop>
+      </svg>
+    </ImageIllustration>
   );
 }
