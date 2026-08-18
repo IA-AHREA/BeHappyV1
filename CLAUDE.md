@@ -69,6 +69,14 @@ src/
   página por la foto en todo el libro (`useCustomImages.ts`, `localStorage` clave
   `behappy_custom_images`, un JSON `{ [pageId]: dataUrl }`). "Quitar" borra la imagen guardada y
   vuelve a mostrar la ilustración original.
+- **Imágenes sin fondo (PNG transparente)**: antes de dibujar la imagen elegida, el canvas de
+  compresión se rellena con el color de página del libro (`BOOK_BACKGROUND = '#f7f3ea'` en
+  `dev/imageUtils.ts`, el mismo que `paper` en `tailwind.config.js`) y recién ahí se dibuja la
+  imagen encima. Como el resultado se exporta a JPEG (sin canal alfa), sin este paso el navegador
+  aplana la transparencia a negro; con el relleno previo, lo transparente se funde con el fondo
+  del libro en vez de verse un recuadro negro. En `Page.tsx` la imagen se muestra con
+  `object-contain` (no `object-cover`) para no recortar el recorte y dejar que el `bg-paper` del
+  contenedor complete los bordes si la proporción no coincide con la de la página.
 - Todo es 100% cliente: no hay subida a ningún servidor. Si se reemplazan muchas páginas con
   fotos grandes se puede llegar a la cuota de `localStorage` (~5-10MB según navegador); en ese
   caso el cambio se ve en la sesión actual pero `DevImagePanel` avisa que no se pudo guardar.

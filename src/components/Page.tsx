@@ -34,11 +34,7 @@ export default function Page(props: PageProps) {
         <>
           <div className="flex h-full w-full items-center justify-center p-[7%]">
             {props.customImage ? (
-              <img
-                src={props.customImage}
-                alt=""
-                className="h-full w-full rounded-lg object-cover"
-              />
+              <img src={props.customImage} alt="" className="h-full w-full object-contain" />
             ) : (
               <props.Illustration />
             )}
