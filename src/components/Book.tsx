@@ -6,6 +6,11 @@ import { pages } from '../data/pages';
 import Controls from './Controls';
 import Page from './Page';
 
+interface BookProps {
+  /** Called with a page id whenever the reader reaches that page's spread. */
+  onPageRead?: (id: string) => void;
+}
+
 const TOTAL_SPREADS = pages.length;
 const LAST_LEAF_INDEX = TOTAL_SPREADS * 2 - 2;
 
@@ -23,13 +28,20 @@ const Leaf = forwardRef<HTMLDivElement, LeafProps>(function Leaf({ children }, r
 });
 
 /** The interactive flip-book: wires react-pageflip to our pages, keyboard nav, and controls. */
-export default function Book() {
+export default function Book({ onPageRead }: BookProps) {
   const bookRef = useRef<HTMLFlipBook>(null);
   const [leafIndex, setLeafIndex] = useState(0);
 
   const spread = Math.floor(leafIndex / 2);
   const atStart = leafIndex <= 0;
   const atEnd = leafIndex >= LAST_LEAF_INDEX;
+
+  useEffect(() => {
+    onPageRead?.(pages[spread].id);
+    if (spread === TOTAL_SPREADS - 1) {
+      onPageRead?.('completo');
+    }
+  }, [spread, onPageRead]);
 
   const goPrev = useCallback(() => {
     bookRef.current?.pageFlip().flipPrev();

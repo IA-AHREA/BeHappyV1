@@ -12,17 +12,38 @@ cómo está armado, y qué falta pulir.
 
 ```
 src/
-  App.tsx                  shell: fondo oscuro + <Book/> + <MusicToggle/>
+  App.tsx                  shell: gate de contraseña → <Book/>/<AchievementsPage/> + <MusicToggle/> + <TrophyButton/> + <AchievementToast/>
+  auth/
+    WelcomeGate.tsx          pantalla "Bienvenida" + input de contraseña (hardcoded, ver abajo)
   components/
-    Book.tsx                integra react-pageflip, teclado (← →), swipe
+    Book.tsx                integra react-pageflip, teclado (← →), swipe, dispara onPageRead por spread
     Controls.tsx             flechas, contador "01 / 31", barra de progreso
     Page.tsx                 una hoja: frase (Caveat) o ilustración
+  achievements/
+    data.ts                  31 logros (uno por página, con emoji-icono) + logro de "libro completo"
+    useAchievements.ts        hook: persiste desbloqueados en localStorage, cola de logros nuevos para el toast
+    AchievementToast.tsx      notificación estilo Minecraft ("Logro desbloqueado") arriba de la pantalla
+    AchievementsPage.tsx      pantalla de logros: grilla con desbloqueados/"???"
+    TrophyButton.tsx          botón flotante (abajo-izquierda) para abrir/cerrar la pantalla de logros
   data/pages.ts              las 31 frases + qué componente de ilustración usa cada una
   illustrations/
     primitives.tsx           motor de animación compartido (ver abajo)
     <Nombre>.tsx              una ilustración SVG por escena (31 archivos)
   audio/useAmbientPiano.ts   piano ambiental generativo (Web Audio API, sin assets)
 ```
+
+## Acceso y logros
+
+- **Contraseña**: hardcodeada en `src/auth/WelcomeGate.tsx` (`mymelody`, case-insensitive).
+  Al acertar se guarda `behappy_authenticated=true` en `localStorage`, así que no vuelve a
+  pedirla en la misma máquina/navegador. Si se quiere cambiar la contraseña, es ese único
+  `const PASSWORD` — no hay backend ni validación de servidor, es solo una barrera simbólica.
+- **Logros**: uno por cada una de las 31 páginas (título = la frase de esa página, p. ej.
+  "Lee.") más un logro extra "Las 31 razones" al llegar a la última página. Se desbloquean
+  automáticamente al pasar a esa página (`Book.tsx` llama `onPageRead(id)` en cada cambio de
+  spread), se persisten en `localStorage` (`behappy_achievements`) y se muestran con un toast
+  estilo Minecraft ("Logro desbloqueado"). El trofeo 🏆 abajo-izquierda abre la pantalla de
+  logros, donde los no desbloqueados aparecen como "???" con ícono `❔`.
 
 ## Estilo visual de las ilustraciones
 
