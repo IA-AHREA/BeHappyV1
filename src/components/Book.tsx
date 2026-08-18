@@ -9,6 +9,12 @@ import Page from './Page';
 interface BookProps {
   /** Called with a page id whenever the reader reaches that page's spread. */
   onPageRead?: (id: string) => void;
+  /** When true, art pages show a panel to replace their illustration with a custom photo. */
+  devMode?: boolean;
+  /** Saved custom images, keyed by page id. */
+  customImages?: Record<string, string>;
+  onSaveImage?: (id: string, dataUrl: string) => void;
+  onRemoveImage?: (id: string) => void;
 }
 
 const TOTAL_SPREADS = pages.length;
@@ -28,7 +34,7 @@ const Leaf = forwardRef<HTMLDivElement, LeafProps>(function Leaf({ children }, r
 });
 
 /** The interactive flip-book: wires react-pageflip to our pages, keyboard nav, and controls. */
-export default function Book({ onPageRead }: BookProps) {
+export default function Book({ onPageRead, devMode, customImages, onSaveImage, onRemoveImage }: BookProps) {
   const bookRef = useRef<HTMLFlipBook>(null);
   const [leafIndex, setLeafIndex] = useState(0);
 
@@ -92,7 +98,15 @@ export default function Book({ onPageRead }: BookProps) {
               <Page side="text" index={i} phrase={page.phrase} />
             </Leaf>,
             <Leaf key={`art-${page.id}`}>
-              <Page side="art" index={i} Illustration={page.Illustration} />
+              <Page
+                side="art"
+                index={i}
+                Illustration={page.Illustration}
+                customImage={customImages?.[page.id]}
+                devMode={devMode}
+                onSaveImage={(dataUrl) => onSaveImage?.(page.id, dataUrl)}
+                onRemoveImage={() => onRemoveImage?.(page.id)}
+              />
             </Leaf>,
           ])}
         </HTMLFlipBook>

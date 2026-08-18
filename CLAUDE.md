@@ -30,6 +30,14 @@ src/
     primitives.tsx           motor de animación compartido (ver abajo)
     <Nombre>.tsx              una ilustración SVG por escena (31 archivos)
   audio/useAmbientPiano.ts   piano ambiental generativo (Web Audio API, sin assets)
+  dev/
+    ConfigGear.tsx            tuerca ⚙️ (arriba-izquierda, visible desde el arranque) + modal de
+                               contraseña + panel de "Modo desarrollador"
+    DevImagePanel.tsx         panel que aparece sobre cada página con ilustración cuando el modo
+                               desarrollador está activo: elegir imagen / guardar / quitar
+    useDevMode.ts              hook: persiste si el modo desarrollador está activo (localStorage)
+    useCustomImages.ts         hook: persiste las imágenes personalizadas por página (localStorage)
+    imageUtils.ts              redimensiona/comprime la imagen elegida a un data URL (canvas)
 ```
 
 ## Acceso y logros
@@ -44,6 +52,26 @@ src/
   spread), se persisten en `localStorage` (`behappy_achievements`) y se muestran con un toast
   estilo Minecraft ("Logro desbloqueado"). El trofeo 🏆 abajo-izquierda abre la pantalla de
   logros, donde los no desbloqueados aparecen como "???" con ícono `❔`.
+
+## Modo desarrollador (imágenes personalizadas por página)
+
+- **Tuerca ⚙️**: arriba-izquierda, visible desde el arranque (incluso antes de la pantalla
+  "Bienvenida"). Al tocarla pide una contraseña propia — hardcodeada en
+  `src/dev/ConfigGear.tsx` (`const CONFIG_PASSWORD = 'vknt'`, case-insensitive) — separada de
+  la del libro. Es la misma barrera simbólica que la de `WelcomeGate`: sin backend.
+- Con la contraseña correcta se abre el panel "Modo desarrollador", con un switch que activa/
+  desactiva el modo (persistido en `localStorage` como `behappy_dev_mode_enabled`, así que se
+  mantiene activo entre recargas hasta que se apague).
+- Con el modo activo, cada página con ilustración (`Page.tsx`, lado `art`) muestra un panel
+  (`DevImagePanel.tsx`) superpuesto: "Elegir imagen" abre el selector de archivos, la imagen
+  elegida se comprime a ~900px/JPEG 0.82 (`dev/imageUtils.ts`, vía `<canvas>`) para no llenar
+  `localStorage`, se previsualiza, y "Guardar" la persiste — reemplaza la ilustración SVG de esa
+  página por la foto en todo el libro (`useCustomImages.ts`, `localStorage` clave
+  `behappy_custom_images`, un JSON `{ [pageId]: dataUrl }`). "Quitar" borra la imagen guardada y
+  vuelve a mostrar la ilustración original.
+- Todo es 100% cliente: no hay subida a ningún servidor. Si se reemplazan muchas páginas con
+  fotos grandes se puede llegar a la cuota de `localStorage` (~5-10MB según navegador); en ese
+  caso el cambio se ve en la sesión actual pero `DevImagePanel` avisa que no se pudo guardar.
 
 ## Estilo visual de las ilustraciones
 

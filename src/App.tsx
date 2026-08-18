@@ -7,6 +7,9 @@ import AchievementToast from './achievements/AchievementToast';
 import TrophyButton from './achievements/TrophyButton';
 import { useAchievements } from './achievements/useAchievements';
 import { achievements } from './achievements/data';
+import ConfigGear from './dev/ConfigGear';
+import { useDevMode } from './dev/useDevMode';
+import { useCustomImages } from './dev/useCustomImages';
 
 const AUTH_KEY = 'behappy_authenticated';
 
@@ -17,22 +20,33 @@ export default function App() {
   const [authenticated, setAuthenticated] = useState(() => localStorage.getItem(AUTH_KEY) === 'true');
   const [view, setView] = useState<View>('book');
   const { unlocked, unlock, current, dismissCurrent } = useAchievements();
+  const { enabled: devMode, setDevMode } = useDevMode();
+  const { images: customImages, saveImage, removeImage } = useCustomImages();
 
   if (!authenticated) {
     return (
-      <WelcomeGate
-        onUnlock={() => {
-          localStorage.setItem(AUTH_KEY, 'true');
-          setAuthenticated(true);
-        }}
-      />
+      <>
+        <WelcomeGate
+          onUnlock={() => {
+            localStorage.setItem(AUTH_KEY, 'true');
+            setAuthenticated(true);
+          }}
+        />
+        <ConfigGear devModeEnabled={devMode} onToggleDevMode={setDevMode} />
+      </>
     );
   }
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 py-6">
       {view === 'book' ? (
-        <Book onPageRead={unlock} />
+        <Book
+          onPageRead={unlock}
+          devMode={devMode}
+          customImages={customImages}
+          onSaveImage={saveImage}
+          onRemoveImage={removeImage}
+        />
       ) : (
         <AchievementsPage unlocked={unlocked} onBack={() => setView('book')} />
       )}
@@ -43,6 +57,7 @@ export default function App() {
         total={achievements.length}
       />
       <AchievementToast achievement={current} onDone={dismissCurrent} />
+      <ConfigGear devModeEnabled={devMode} onToggleDevMode={setDevMode} />
     </div>
   );
 }
