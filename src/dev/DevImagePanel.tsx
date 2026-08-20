@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { fileToCompressedDataUrl } from './imageUtils';
 
@@ -8,36 +8,39 @@ interface DevImagePanelProps {
   onRemove?: () => void;
 }
 
-/** Dev-mode overlay on an art page: pick a photo, preview it, and save it in place of the illustration. */
+type Status = 'idle' | 'busy' | 'done' | 'error';
+
+/** Dev-mode overlay on an art page: pick a photo and it's saved immediately, replacing the illustration. */
 export default function DevImagePanel({ hasCustomImage, onSave, onRemove }: DevImagePanelProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [pending, setPending] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<Status>('idle');
+  const [message, setMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status !== 'done' && status !== 'error') return;
+    const timer = setTimeout(() => setStatus('idle'), 2500);
+    return () => clearTimeout(timer);
+  }, [status]);
 
   async function handleFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
-    setBusy(true);
-    setError(null);
+    setStatus('busy');
+    setMessage(null);
     try {
       const dataUrl = await fileToCompressedDataUrl(file);
-      setPending(dataUrl);
+      try {
+        onSave?.(dataUrl);
+        setStatus('done');
+        setMessage('Imagen guardada');
+      } catch {
+        setStatus('done');
+        setMessage('Se aplicó, pero no se pudo guardar (memoria llena)');
+      }
     } catch {
-      setError('No se pudo leer la imagen');
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function handleSave() {
-    if (!pending || !onSave) return;
-    try {
-      onSave(pending);
-      setPending(null);
-    } catch {
-      setError('Se aplicó, pero no se pudo guardar (memoria llena)');
+      setStatus('error');
+      setMessage('No se pudo leer la imagen');
     }
   }
 
@@ -48,29 +51,20 @@ export default function DevImagePanel({ hasCustomImage, onSave, onRemove }: DevI
     >
       <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-accent">Modo desarrollador</span>
 
-      {pending && <img src={pending} alt="Vista previa" className="h-16 w-full rounded-md object-cover" />}
-
-      {error && <p className="font-sans text-[10px] text-accent">{error}</p>}
+      {message && (
+        <p className={`font-sans text-[10px] ${status === 'error' ? 'text-accent' : 'text-[#cbb9a0]'}`}>{message}</p>
+      )}
 
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={busy}
+          disabled={status === 'busy'}
           className="rounded-full border border-[#f7f3ea]/25 px-3 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-wide text-[#f3ead9] disabled:opacity-50"
         >
-          {busy ? 'Cargando…' : 'Elegir imagen'}
+          {status === 'busy' ? 'Guardando…' : 'Elegir imagen'}
         </button>
-        {pending && (
-          <button
-            type="button"
-            onClick={handleSave}
-            className="rounded-full bg-accent px-3 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-wide text-[#f7f3ea]"
-          >
-            Guardar
-          </button>
-        )}
-        {hasCustomImage && !pending && (
+        {hasCustomImage && status !== 'busy' && (
           <button
             type="button"
             onClick={onRemove}

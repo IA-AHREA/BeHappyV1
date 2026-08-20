@@ -63,12 +63,14 @@ src/
   desactiva el modo (persistido en `localStorage` como `behappy_dev_mode_enabled`, así que se
   mantiene activo entre recargas hasta que se apague).
 - Con el modo activo, cada página con ilustración (`Page.tsx`, lado `art`) muestra un panel
-  (`DevImagePanel.tsx`) superpuesto: "Elegir imagen" abre el selector de archivos, la imagen
-  elegida se comprime a ~900px/JPEG 0.82 (`dev/imageUtils.ts`, vía `<canvas>`) para no llenar
-  `localStorage`, se previsualiza, y "Guardar" la persiste — reemplaza la ilustración SVG de esa
-  página por la foto en todo el libro (`useCustomImages.ts`, `localStorage` clave
-  `behappy_custom_images`, un JSON `{ [pageId]: dataUrl }`). "Quitar" borra la imagen guardada y
-  vuelve a mostrar la ilustración original.
+  (`DevImagePanel.tsx`) superpuesto: "Elegir imagen" abre el selector de archivos y, apenas se
+  elige una, se guarda sola — sin un paso de "Guardar" aparte (se probó que ese botón separado
+  a veces no se veía/tocaba bien en dispositivos reales, así que se sacó esa fricción). La
+  imagen se comprime a ~900px/JPEG 0.82 (`dev/imageUtils.ts`, vía `<canvas>`) para no llenar
+  `localStorage`, reemplaza al instante la ilustración SVG de esa página por la foto en todo el
+  libro (`useCustomImages.ts`, `localStorage` clave `behappy_custom_images`, un JSON
+  `{ [pageId]: dataUrl }`), y el panel muestra brevemente "Imagen guardada". "Quitar" borra la
+  imagen guardada y vuelve a mostrar la ilustración original.
 - **Imágenes sin fondo (PNG transparente)**: antes de dibujar la imagen elegida, el canvas de
   compresión se rellena con el color de página del libro (`BOOK_BACKGROUND = '#f7f3ea'` en
   `dev/imageUtils.ts`, el mismo que `paper` en `tailwind.config.js`) y recién ahí se dibuja la
