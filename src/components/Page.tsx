@@ -13,8 +13,8 @@ interface ArtPageProps {
   Illustration: ComponentType;
   customImage?: string;
   devMode?: boolean;
-  onSaveImage?: (dataUrl: string) => void;
-  onRemoveImage?: () => void;
+  onSaveImage?: (dataUrl: string) => Promise<void>;
+  onRemoveImage?: () => Promise<void>;
 }
 
 type PageProps = TextPageProps | ArtPageProps;

@@ -4,8 +4,8 @@ import { fileToCompressedDataUrl } from './imageUtils';
 
 interface DevImagePanelProps {
   hasCustomImage: boolean;
-  onSave?: (dataUrl: string) => void;
-  onRemove?: () => void;
+  onSave?: (dataUrl: string) => Promise<void>;
+  onRemove?: () => Promise<void>;
 }
 
 type Status = 'idle' | 'busy' | 'done' | 'error';
@@ -31,16 +31,28 @@ export default function DevImagePanel({ hasCustomImage, onSave, onRemove }: DevI
     try {
       const dataUrl = await fileToCompressedDataUrl(file);
       try {
-        onSave?.(dataUrl);
+        await onSave?.(dataUrl);
         setStatus('done');
         setMessage('Imagen guardada');
       } catch {
-        setStatus('done');
-        setMessage('Se aplicó, pero no se pudo guardar (memoria llena)');
+        setStatus('error');
+        setMessage('No se pudo guardar (revisá tu conexión)');
       }
     } catch {
       setStatus('error');
       setMessage('No se pudo leer la imagen');
+    }
+  }
+
+  async function handleRemove() {
+    setStatus('busy');
+    setMessage(null);
+    try {
+      await onRemove?.();
+      setStatus('idle');
+    } catch {
+      setStatus('error');
+      setMessage('No se pudo quitar la imagen');
     }
   }
 
@@ -67,7 +79,7 @@ export default function DevImagePanel({ hasCustomImage, onSave, onRemove }: DevI
         {hasCustomImage && status !== 'busy' && (
           <button
             type="button"
-            onClick={onRemove}
+            onClick={handleRemove}
             className="rounded-full border border-[#f7f3ea]/15 px-3 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-wide text-[#cbb9a0]"
           >
             Quitar

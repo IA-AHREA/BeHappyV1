@@ -13,8 +13,8 @@ interface BookProps {
   devMode?: boolean;
   /** Saved custom images, keyed by page id. */
   customImages?: Record<string, string>;
-  onSaveImage?: (id: string, dataUrl: string) => void;
-  onRemoveImage?: (id: string) => void;
+  onSaveImage?: (id: string, dataUrl: string) => Promise<void>;
+  onRemoveImage?: (id: string) => Promise<void>;
 }
 
 const TOTAL_SPREADS = pages.length;
@@ -104,8 +104,8 @@ export default function Book({ onPageRead, devMode, customImages, onSaveImage, o
                 Illustration={page.Illustration}
                 customImage={customImages?.[page.id]}
                 devMode={devMode}
-                onSaveImage={(dataUrl) => onSaveImage?.(page.id, dataUrl)}
-                onRemoveImage={() => onRemoveImage?.(page.id)}
+                onSaveImage={(dataUrl) => onSaveImage?.(page.id, dataUrl) ?? Promise.resolve()}
+                onRemoveImage={() => onRemoveImage?.(page.id) ?? Promise.resolve()}
               />
             </Leaf>,
           ])}

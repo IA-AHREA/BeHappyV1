@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-
-const CONFIG_PASSWORD = 'vknt';
+import { DEV_KEY } from './devKey';
 
 interface ConfigGearProps {
   devModeEnabled: boolean;
@@ -31,7 +30,7 @@ export default function ConfigGear({ devModeEnabled, onToggleDevMode }: ConfigGe
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (value.trim().toLowerCase() === CONFIG_PASSWORD) {
+    if (value.trim().toLowerCase() === DEV_KEY) {
       setStage('panel');
     } else {
       setError(true);

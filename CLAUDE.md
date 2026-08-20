@@ -1,8 +1,10 @@
 # Pequeñas notas — guía del proyecto
 
 Libro interactivo de 31 razones para ser feliz. Vite + React + TypeScript +
-Tailwind CSS + Framer Motion + react-pageflip. Deploy estático en Railway
-(`npm run build` → `npm run start` sirve `dist/` con `serve`).
+Tailwind CSS + Framer Motion + react-pageflip, con un backend Express chico
+(`server/index.js`) para el modo desarrollador. Deploy en Railway
+(`npm run build` → `npm run start` corre `server/index.js`, que sirve
+`dist/` y la API de imágenes personalizadas en el mismo proceso).
 
 Este archivo existe para que cualquier sesión de Claude (o cualquier persona)
 retome el trabajo sin tener que releer todo el historial de chat: qué hay,
@@ -34,10 +36,15 @@ src/
     ConfigGear.tsx            tuerca ⚙️ (arriba-izquierda, visible desde el arranque) + modal de
                                contraseña + panel de "Modo desarrollador"
     DevImagePanel.tsx         panel que aparece sobre cada página con ilustración cuando el modo
-                               desarrollador está activo: elegir imagen / guardar / quitar
-    useDevMode.ts              hook: persiste si el modo desarrollador está activo (localStorage)
-    useCustomImages.ts         hook: persiste las imágenes personalizadas por página (localStorage)
+                               desarrollador está activo: elegir imagen (se guarda sola) / quitar
+    useDevMode.ts              hook: persiste si el modo desarrollador está activo (localStorage,
+                               es una preferencia del navegador, no del libro — ver abajo)
+    useCustomImages.ts         hook: trae/guarda/borra las imágenes personalizadas vía la API
+                               (fetch a /api/images), no localStorage
     imageUtils.ts              redimensiona/comprime la imagen elegida a un data URL (canvas)
+    devKey.ts                  contraseña compartida entre el cliente y `server/index.js`
+server/
+  index.js                   Express: sirve dist/ + API de imágenes personalizadas (ver abajo)
 ```
 
 ## Acceso y logros
@@ -56,32 +63,47 @@ src/
 ## Modo desarrollador (imágenes personalizadas por página)
 
 - **Tuerca ⚙️**: arriba-izquierda, visible desde el arranque (incluso antes de la pantalla
-  "Bienvenida"). Al tocarla pide una contraseña propia — hardcodeada en
-  `src/dev/ConfigGear.tsx` (`const CONFIG_PASSWORD = 'vknt'`, case-insensitive) — separada de
-  la del libro. Es la misma barrera simbólica que la de `WelcomeGate`: sin backend.
+  "Bienvenida"). Al tocarla pide una contraseña propia — `src/dev/devKey.ts` (`DEV_KEY = 'vknt'`,
+  case-insensitive) — separada de la del libro. Sigue siendo una barrera simbólica en el cliente
+  (visible en el bundle), pero ahora el servidor también la exige para escribir (ver abajo).
 - Con la contraseña correcta se abre el panel "Modo desarrollador", con un switch que activa/
-  desactiva el modo (persistido en `localStorage` como `behappy_dev_mode_enabled`, así que se
-  mantiene activo entre recargas hasta que se apague).
+  desactiva el modo (persistido en `localStorage` como `behappy_dev_mode_enabled` — es una
+  preferencia de ESE navegador, no algo que viaje al servidor: solo decide si ese visitante ve
+  los paneles de edición superpuestos, no afecta qué imágenes tiene el libro).
 - Con el modo activo, cada página con ilustración (`Page.tsx`, lado `art`) muestra un panel
   (`DevImagePanel.tsx`) superpuesto: "Elegir imagen" abre el selector de archivos y, apenas se
-  elige una, se guarda sola — sin un paso de "Guardar" aparte (se probó que ese botón separado
-  a veces no se veía/tocaba bien en dispositivos reales, así que se sacó esa fricción). La
-  imagen se comprime a ~900px/JPEG 0.82 (`dev/imageUtils.ts`, vía `<canvas>`) para no llenar
-  `localStorage`, reemplaza al instante la ilustración SVG de esa página por la foto en todo el
-  libro (`useCustomImages.ts`, `localStorage` clave `behappy_custom_images`, un JSON
-  `{ [pageId]: dataUrl }`), y el panel muestra brevemente "Imagen guardada". "Quitar" borra la
-  imagen guardada y vuelve a mostrar la ilustración original.
+  elige una, se guarda sola — sin un paso de "Guardar" aparte (un botón separado a veces no se
+  veía/tocaba bien en dispositivos reales, así que se sacó esa fricción). La imagen se comprime a
+  ~900px/JPEG 0.82 en el navegador (`dev/imageUtils.ts`, vía `<canvas>`) y se sube con
+  `POST /api/images/:pageId` (header `x-dev-key`); el panel muestra "Imagen guardada" al
+  confirmarse. "Quitar" llama `DELETE /api/images/:pageId` y vuelve a mostrar la ilustración
+  original.
+- **Por qué server y no `localStorage`** (así era antes): `localStorage` es por navegador — una
+  imagen guardada ahí solo se veía en el dispositivo que la subió, y desaparecía si se limpiaban
+  cookies/datos del sitio (localStorage vive bajo ese mismo paraguas en casi todos los
+  navegadores). El pedido era que la imagen quedara pegada *al libro*, visible para cualquiera
+  que lo abra — así que ahora el servidor (`server/index.js`) la guarda como archivo real en
+  `DATA_DIR/uploads/<pageId>-<timestamp>.jpg` + un manifiesto `DATA_DIR/manifest.json`
+  (`{ [pageId]: filename }`); `GET /api/images` (público, sin contraseña) devuelve el mapa
+  `{ [pageId]: url }` que `useCustomImages.ts` carga al montar. Los archivos se sirven desde
+  `/uploads/*` como estáticos.
+- **Volume de Railway**: `DATA_DIR` default es `./data` dentro del proyecto — en Railway ese
+  filesystem se resetea en cada redeploy. Para que las fotos sean realmente permanentes hay que
+  montar un Volume en el servicio (dashboard de Railway → el servicio → Volumes) y setear
+  `DATA_DIR` a esa ruta montada. Sin ese paso el modo desarrollador sigue andando pero las fotos
+  se pierden en el próximo deploy — ver README.md.
 - **Imágenes sin fondo (PNG transparente)**: antes de dibujar la imagen elegida, el canvas de
-  compresión se rellena con el color de página del libro (`BOOK_BACKGROUND = '#f7f3ea'` en
-  `dev/imageUtils.ts`, el mismo que `paper` en `tailwind.config.js`) y recién ahí se dibuja la
-  imagen encima. Como el resultado se exporta a JPEG (sin canal alfa), sin este paso el navegador
-  aplana la transparencia a negro; con el relleno previo, lo transparente se funde con el fondo
-  del libro en vez de verse un recuadro negro. En `Page.tsx` la imagen se muestra con
-  `object-contain` (no `object-cover`) para no recortar el recorte y dejar que el `bg-paper` del
-  contenedor complete los bordes si la proporción no coincide con la de la página.
-- Todo es 100% cliente: no hay subida a ningún servidor. Si se reemplazan muchas páginas con
-  fotos grandes se puede llegar a la cuota de `localStorage` (~5-10MB según navegador); en ese
-  caso el cambio se ve en la sesión actual pero `DevImagePanel` avisa que no se pudo guardar.
+  compresión (en el navegador, antes de subirla) se rellena con el color de página del libro
+  (`BOOK_BACKGROUND = '#f7f3ea'` en `dev/imageUtils.ts`, el mismo que `paper` en
+  `tailwind.config.js`) y recién ahí se dibuja la imagen encima. Como el resultado se exporta a
+  JPEG (sin canal alfa), sin este paso el navegador aplana la transparencia a negro; con el
+  relleno previo, lo transparente se funde con el fondo del libro en vez de verse un recuadro
+  negro. En `Page.tsx` la imagen se muestra con `object-contain` (no `object-cover`) para no
+  recortar el recorte y dejar que el `bg-paper` del contenedor complete los bordes si la
+  proporción no coincide con la de la página.
+- **Desarrollo local**: hacen falta dos procesos — `npm run server` (Express en :8787) y
+  `npm run dev` (Vite, con `server.proxy` en `vite.config.ts` mandando `/api` y `/uploads` al
+  puerto 8787). En producción `npm run start` corre solo `server/index.js`, que sirve todo.
 
 ## Estilo visual de las ilustraciones
 
