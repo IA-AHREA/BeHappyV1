@@ -59,6 +59,10 @@ export default function DevImagePanel({ hasCustomImage, onSave, onRemove }: DevI
   return (
     <div
       onClick={(event) => event.stopPropagation()}
+      // See the matching comment in DevTextPanel.tsx: stops react-pageflip's flip gesture from
+      // hijacking taps inside this panel before its own bubble-phase listener ever sees them.
+      onMouseDownCapture={(event) => event.stopPropagation()}
+      onTouchStartCapture={(event) => event.stopPropagation()}
       className="absolute inset-x-3 bottom-3 z-10 flex flex-col gap-2 rounded-xl border border-accent/40 bg-[#241c17]/90 p-3 text-left shadow-lg backdrop-blur"
     >
       <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-accent">Modo desarrollador</span>

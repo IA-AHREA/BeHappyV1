@@ -84,6 +84,12 @@ export default function DevTextPanel({ phrase, onSave, onDelete }: DevTextPanelP
   return (
     <div
       onClick={(event) => event.stopPropagation()}
+      // react-pageflip listens for mousedown/touchstart on the whole book to start its drag-to-flip
+      // gesture, exempting only <a>/<button> tags — a <textarea> isn't exempt, so without stopping
+      // propagation here *before* that (capture fires before the flip library's bubble-phase
+      // listener even runs) tapping into the field gets swallowed as a page flip instead of focusing it.
+      onMouseDownCapture={(event) => event.stopPropagation()}
+      onTouchStartCapture={(event) => event.stopPropagation()}
       className="absolute inset-x-3 bottom-3 z-10 flex flex-col gap-2 rounded-xl border border-accent/40 bg-[#241c17]/90 p-3 text-left shadow-lg backdrop-blur"
     >
       <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-accent">Modo desarrollador</span>
