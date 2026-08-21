@@ -6,15 +6,29 @@ import { DEV_KEY } from './devKey';
 interface ConfigGearProps {
   devModeEnabled: boolean;
   onToggleDevMode: (value: boolean) => void;
+  onAddPage?: () => Promise<unknown>;
 }
 
 type Stage = 'closed' | 'password' | 'panel';
+type AddPageStatus = 'idle' | 'busy' | 'done' | 'error';
 
 /** Gear button visible from the very start of the app; gates developer settings behind a password. */
-export default function ConfigGear({ devModeEnabled, onToggleDevMode }: ConfigGearProps) {
+export default function ConfigGear({ devModeEnabled, onToggleDevMode, onAddPage }: ConfigGearProps) {
   const [stage, setStage] = useState<Stage>('closed');
   const [value, setValue] = useState('');
   const [error, setError] = useState(false);
+  const [addPageStatus, setAddPageStatus] = useState<AddPageStatus>('idle');
+
+  async function handleAddPage() {
+    setAddPageStatus('busy');
+    try {
+      await onAddPage?.();
+      setAddPageStatus('done');
+    } catch {
+      setAddPageStatus('error');
+    }
+    setTimeout(() => setAddPageStatus('idle'), 2500);
+  }
 
   function open() {
     setStage('password');
@@ -121,8 +135,9 @@ export default function ConfigGear({ devModeEnabled, onToggleDevMode }: ConfigGe
                     <h2 className="font-caveat text-3xl font-semibold text-[#f3ead9]">Modo desarrollador</h2>
                   </div>
                   <p className="font-sans text-xs leading-relaxed text-[#cbb9a0]/80">
-                    Con el modo desarrollador activo, cada página con ilustración muestra un panel
-                    para elegir tu propia imagen y guardarla en el libro.
+                    Con el modo desarrollador activo, cada página muestra un panel para elegir tu
+                    propia imagen, editar su texto, o eliminarla. También podés agregar páginas
+                    nuevas al final del libro.
                   </p>
                   <button
                     type="button"
@@ -143,6 +158,28 @@ export default function ConfigGear({ devModeEnabled, onToggleDevMode }: ConfigGe
                       <motion.span layout className="h-5 w-5 rounded-full bg-[#f7f3ea] shadow" />
                     </span>
                   </button>
+
+                  {devModeEnabled && (
+                    <div className="flex w-full flex-col items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleAddPage}
+                        disabled={addPageStatus === 'busy'}
+                        className="w-full rounded-full border border-[#f7f3ea]/20 bg-[#f7f3ea]/5 px-4 py-2.5 font-sans text-xs font-semibold uppercase tracking-wide text-[#f3ead9] disabled:opacity-50"
+                      >
+                        {addPageStatus === 'busy' ? 'Agregando…' : '+ Agregar página'}
+                      </button>
+                      {addPageStatus === 'done' && (
+                        <p className="font-sans text-[11px] text-[#cbb9a0]">
+                          Página agregada al final del libro
+                        </p>
+                      )}
+                      {addPageStatus === 'error' && (
+                        <p className="font-sans text-[11px] text-accent">No se pudo agregar la página</p>
+                      )}
+                    </div>
+                  )}
+
                   <button
                     type="button"
                     onClick={close}

@@ -1,4 +1,4 @@
-import { pages } from '../data/pages';
+import type { BookPage } from '../data/pages';
 
 export interface Achievement {
   id: string;
@@ -41,17 +41,6 @@ const ICONS: Record<string, string> = {
   empieza: '🌅',
 };
 
-/** One achievement per page, titled after its phrase (e.g. "Lee un libro"). */
-export const pageAchievements: Achievement[] = pages.map((page) => {
-  const phrase = page.phrase.replace(/\n/g, ' ');
-  return {
-    id: page.id,
-    title: `${phrase}.`,
-    description: `Leíste la razón "${phrase}".`,
-    icon: ICONS[page.id] ?? '⭐',
-  };
-});
-
 export const completionAchievement: Achievement = {
   id: 'completo',
   title: 'Las 31 razones',
@@ -59,4 +48,20 @@ export const completionAchievement: Achievement = {
   icon: '🏆',
 };
 
-export const achievements: Achievement[] = [...pageAchievements, completionAchievement];
+/**
+ * One achievement per page, titled after its phrase (e.g. "Lee un libro"), plus the completion
+ * bonus. Built from the current page list (not a static import) so dev-mode edits/additions/
+ * removals of pages are reflected automatically.
+ */
+export function buildAchievements(pages: BookPage[]): Achievement[] {
+  const pageAchievements = pages.map((page) => {
+    const phrase = page.phrase.replace(/\n/g, ' ');
+    return {
+      id: page.id,
+      title: `${phrase}.`,
+      description: `Leíste la razón "${phrase}".`,
+      icon: ICONS[page.id] ?? '⭐',
+    };
+  });
+  return [...pageAchievements, completionAchievement];
+}

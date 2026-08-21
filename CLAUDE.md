@@ -27,7 +27,9 @@ src/
     AchievementToast.tsx      notificación estilo Minecraft ("Logro desbloqueado") arriba de la pantalla
     AchievementsPage.tsx      pantalla de logros: grilla con desbloqueados/"???"
     TrophyButton.tsx          botón flotante (abajo-izquierda) para abrir/cerrar la pantalla de logros
-  data/pages.ts              las 31 frases + qué componente de ilustración usa cada una
+  data/pages.ts              DEFAULT_PAGES: las 31 frases + qué componente de ilustración usa
+                               cada una — sigue siendo la fuente de verdad; usePages.ts la combina
+                               con los cambios guardados en el servidor (ver abajo)
   illustrations/
     primitives.tsx           motor de animación compartido (ver abajo)
     <Nombre>.tsx              una ilustración SVG por escena (31 archivos)
@@ -41,10 +43,15 @@ src/
                                es una preferencia del navegador, no del libro — ver abajo)
     useCustomImages.ts         hook: trae/guarda/borra las imágenes personalizadas vía la API
                                (fetch a /api/images), no localStorage
+    usePages.ts                 hook: trae/edita/agrega/borra páginas vía la API (/api/pages),
+                               fusionando el resultado con DEFAULT_PAGES
+    DevTextPanel.tsx            panel que aparece sobre la mitad de texto de cada página cuando
+                               el modo desarrollador está activo: editar la frase (auto-guarda) /
+                               eliminar la página (doble tap para confirmar)
     imageUtils.ts              redimensiona/comprime la imagen elegida a un data URL (canvas)
     devKey.ts                  contraseña compartida entre el cliente y `server/index.js`
 server/
-  index.js                   Express: sirve dist/ + API de imágenes personalizadas (ver abajo)
+  index.js                   Express: sirve dist/ + API de imágenes y de páginas (ver abajo)
 ```
 
 ## Acceso y logros
@@ -53,8 +60,11 @@ server/
   Al acertar se guarda `behappy_authenticated=true` en `localStorage`, así que no vuelve a
   pedirla en la misma máquina/navegador. Si se quiere cambiar la contraseña, es ese único
   `const PASSWORD` — no hay backend ni validación de servidor, es solo una barrera simbólica.
-- **Logros**: uno por cada una de las 31 páginas (título = la frase de esa página, p. ej.
-  "Lee.") más un logro extra "Las 31 razones" al llegar a la última página. Se desbloquean
+- **Logros**: uno por cada página del libro (título = la frase de esa página, p. ej. "Lee.")
+  más un logro extra "Las 31 razones" al llegar a la última página. `buildAchievements(pages)`
+  en `achievements/data.ts` los arma a partir de la lista de páginas VIGENTE (no un array
+  estático) — así que si se edita una frase, se agrega o se elimina una página desde el modo
+  desarrollador (ver más abajo), la lista de logros se actualiza sola. Se desbloquean
   automáticamente al pasar a esa página (`Book.tsx` llama `onPageRead(id)` en cada cambio de
   spread), se persisten en `localStorage` (`behappy_achievements`) y se muestran con un toast
   estilo Minecraft ("Logro desbloqueado"). El trofeo 🏆 abajo-izquierda abre la pantalla de
@@ -104,6 +114,40 @@ server/
 - **Desarrollo local**: hacen falta dos procesos — `npm run server` (Express en :8787) y
   `npm run dev` (Vite, con `server.proxy` en `vite.config.ts` mandando `/api` y `/uploads` al
   puerto 8787). En producción `npm run start` corre solo `server/index.js`, que sirve todo.
+
+## Modo desarrollador (editar texto / agregar / eliminar páginas)
+
+- Con el modo activo, cada página de TEXTO (`Page.tsx`, lado `text`) muestra un panel
+  (`DevTextPanel.tsx`) superpuesto con un `<textarea>` con la frase actual. Se auto-guarda al
+  perder el foco (`onBlur`) y también con un debounce de 1s mientras se tipea, para no perder
+  cambios si el lector pasa de página sin tocar afuera del textarea antes. Guarda con
+  `PUT /api/pages/:pageId` (header `x-dev-key`).
+- El mismo panel tiene un botón "Eliminar página" con confirmación de doble toque (el primer
+  toque cambia el texto a "¿Seguro? Tocá de nuevo" por 3s; si no se confirma en ese lapso, se
+  desarma solo) — llama a `DELETE /api/pages/:pageId`.
+- **Agregar página nueva**: botón "+ Agregar página" dentro del panel de la tuerca ⚙️ (no es por
+  página, es una acción global). Crea una página al final del libro con frase "Nueva página" y
+  sin ilustración propia — el lector en modo desarrollador tiene que elegirle una foto desde el
+  panel de imagen de esa página (si no tiene, el lado de arte muestra "Sin imagen todavía" en vez
+  de romper).
+- **Modelo de datos** (`server/index.js`, `DATA_DIR/pages.json`): las 31 páginas originales
+  (`src/data/pages.ts`, `DEFAULT_PAGES`) siguen siendo la fuente de verdad para id/frase/
+  ilustración — el servidor solo guarda *ediciones* encima:
+  - `phraseOverrides: { [pageId]: phrase }` — frase editada de una página original o de una
+    página nueva.
+  - `customPages: [{ id, phrase }]` — páginas agregadas por el modo desarrollador (ids
+    `custom-<timestamp>`), sin componente de ilustración.
+  - `removedIds: [pageId]` — ids de páginas ORIGINALES ocultas del libro. No se borran del
+    código ni se les borra la imagen guardada; solo se excluyen de la lista que arma
+    `usePages.ts` al fusionar. (Eliminar una página *custom*, en cambio, sí la borra del todo —
+    incluida su imagen guardada — porque no existe un "original" al que volver.)
+  - Este diseño (guardar solo el diff, no el libro entero) es a propósito: si se borra
+    `pages.json`, el libro vuelve a como estaba de fábrica en vez de quedar en blanco.
+  - `GET /api/pages` es público; `PUT`/`POST`/`DELETE` piden `x-dev-key` igual que las imágenes.
+- `Book.tsx` ya no importa una lista estática de páginas: recibe `pages` como prop (desde
+  `App.tsx`, que arma la lista con `usePages()`). Si algún día se borraran las 31 páginas
+  originales sin agregar ninguna nueva, `Book.tsx` muestra un mensaje en vez de romperse con un
+  array vacío.
 
 ## Estilo visual de las ilustraciones
 

@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
-import { achievements } from './data';
+import type { Achievement } from './data';
 
 interface AchievementsPageProps {
+  achievements: Achievement[];
   unlocked: Set<string>;
   onBack: () => void;
 }
 
 /** Full-screen trophy room: grid of all achievements, locked ones shown as "???". */
-export default function AchievementsPage({ unlocked, onBack }: AchievementsPageProps) {
+export default function AchievementsPage({ achievements, unlocked, onBack }: AchievementsPageProps) {
   const count = unlocked.size;
   const total = achievements.length;
 

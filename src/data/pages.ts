@@ -35,10 +35,12 @@ import Walking from '../illustrations/Walking';
 export interface BookPage {
   id: string;
   phrase: string;
-  Illustration: ComponentType;
+  /** Missing only for pages added through dev mode — they rely entirely on a custom image. */
+  Illustration?: ComponentType;
 }
 
-export const pages: BookPage[] = [
+/** The book's original 31 pages. Dev-mode edits/additions/removals layer on top — see usePages.ts. */
+export const DEFAULT_PAGES: BookPage[] = [
   { id: 'lee', phrase: 'Lee', Illustration: Reading },
   { id: 'flores', phrase: 'Compra\nflores', Illustration: Flowers },
   { id: 'llegar', phrase: 'Trata\nde llegar', Illustration: Castle },

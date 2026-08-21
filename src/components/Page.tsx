@@ -1,16 +1,20 @@
 import type { ComponentType } from 'react';
 import DevImagePanel from '../dev/DevImagePanel';
+import DevTextPanel from '../dev/DevTextPanel';
 
 interface TextPageProps {
   side: 'text';
   index: number;
   phrase: string;
+  devMode?: boolean;
+  onEditPhrase?: (phrase: string) => Promise<void>;
+  onDeletePage?: () => Promise<void>;
 }
 
 interface ArtPageProps {
   side: 'art';
   index: number;
-  Illustration: ComponentType;
+  Illustration?: ComponentType;
   customImage?: string;
   devMode?: boolean;
   onSaveImage?: (dataUrl: string) => Promise<void>;
@@ -26,17 +30,26 @@ export default function Page(props: PageProps) {
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-paper">
       {props.side === 'text' ? (
-        <p className="whitespace-pre-line px-[10%] text-center font-caveat text-[clamp(22px,4.6vw,34px)] font-semibold leading-tight text-ink">
-          {props.phrase}
-          <span className="text-accent">.</span>
-        </p>
+        <>
+          <p className="whitespace-pre-line px-[10%] text-center font-caveat text-[clamp(22px,4.6vw,34px)] font-semibold leading-tight text-ink">
+            {props.phrase}
+            <span className="text-accent">.</span>
+          </p>
+          {props.devMode && props.onEditPhrase && props.onDeletePage && (
+            <DevTextPanel phrase={props.phrase} onSave={props.onEditPhrase} onDelete={props.onDeletePage} />
+          )}
+        </>
       ) : (
         <>
           <div className="flex h-full w-full items-center justify-center p-[7%]">
             {props.customImage ? (
               <img src={props.customImage} alt="" className="h-full w-full object-contain" />
-            ) : (
+            ) : props.Illustration ? (
               <props.Illustration />
+            ) : (
+              <p className="px-[10%] text-center font-sans text-xs text-ink-soft/50">
+                Sin imagen todavía
+              </p>
             )}
           </div>
           {props.devMode && (

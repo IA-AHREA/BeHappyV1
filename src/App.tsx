@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Book from './components/Book';
 import MusicToggle from './components/MusicToggle';
 import WelcomeGate from './auth/WelcomeGate';
@@ -6,10 +6,11 @@ import AchievementsPage from './achievements/AchievementsPage';
 import AchievementToast from './achievements/AchievementToast';
 import TrophyButton from './achievements/TrophyButton';
 import { useAchievements } from './achievements/useAchievements';
-import { achievements } from './achievements/data';
+import { buildAchievements } from './achievements/data';
 import ConfigGear from './dev/ConfigGear';
 import { useDevMode } from './dev/useDevMode';
 import { useCustomImages } from './dev/useCustomImages';
+import { usePages } from './dev/usePages';
 
 const AUTH_KEY = 'behappy_authenticated';
 
@@ -19,7 +20,9 @@ type View = 'book' | 'achievements';
 export default function App() {
   const [authenticated, setAuthenticated] = useState(() => localStorage.getItem(AUTH_KEY) === 'true');
   const [view, setView] = useState<View>('book');
-  const { unlocked, unlock, current, dismissCurrent } = useAchievements();
+  const { pages, editPhrase, addPage, removePage } = usePages();
+  const achievements = useMemo(() => buildAchievements(pages), [pages]);
+  const { unlocked, unlock, current, dismissCurrent } = useAchievements(achievements);
   const { enabled: devMode, setDevMode } = useDevMode();
   const { images: customImages, saveImage, removeImage } = useCustomImages();
 
@@ -32,7 +35,7 @@ export default function App() {
             setAuthenticated(true);
           }}
         />
-        <ConfigGear devModeEnabled={devMode} onToggleDevMode={setDevMode} />
+        <ConfigGear devModeEnabled={devMode} onToggleDevMode={setDevMode} onAddPage={addPage} />
       </>
     );
   }
@@ -41,14 +44,17 @@ export default function App() {
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 py-6">
       {view === 'book' ? (
         <Book
+          pages={pages}
           onPageRead={unlock}
           devMode={devMode}
           customImages={customImages}
           onSaveImage={saveImage}
           onRemoveImage={removeImage}
+          onEditPhrase={editPhrase}
+          onDeletePage={removePage}
         />
       ) : (
-        <AchievementsPage unlocked={unlocked} onBack={() => setView('book')} />
+        <AchievementsPage achievements={achievements} unlocked={unlocked} onBack={() => setView('book')} />
       )}
       <MusicToggle />
       <TrophyButton
@@ -57,7 +63,7 @@ export default function App() {
         total={achievements.length}
       />
       <AchievementToast achievement={current} onDone={dismissCurrent} />
-      <ConfigGear devModeEnabled={devMode} onToggleDevMode={setDevMode} />
+      <ConfigGear devModeEnabled={devMode} onToggleDevMode={setDevMode} onAddPage={addPage} />
     </div>
   );
 }

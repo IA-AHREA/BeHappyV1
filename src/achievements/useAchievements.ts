@@ -1,5 +1,4 @@
 import { useCallback, useRef, useState } from 'react';
-import { achievements } from './data';
 import type { Achievement } from './data';
 
 const STORAGE_KEY = 'behappy_achievements';
@@ -14,15 +13,17 @@ function loadUnlocked(): Set<string> {
 }
 
 /** Tracks unlocked achievements (persisted) and queues newly-unlocked ones for the toast. */
-export function useAchievements() {
+export function useAchievements(achievements: Achievement[]) {
   const [unlocked, setUnlocked] = useState<Set<string>>(loadUnlocked);
   const [queue, setQueue] = useState<Achievement[]>([]);
   const unlockedRef = useRef(unlocked);
   unlockedRef.current = unlocked;
+  const achievementsRef = useRef(achievements);
+  achievementsRef.current = achievements;
 
   const unlock = useCallback((id: string) => {
     if (unlockedRef.current.has(id)) return;
-    const achievement = achievements.find((entry) => entry.id === id);
+    const achievement = achievementsRef.current.find((entry) => entry.id === id);
     if (!achievement) return;
 
     setUnlocked((prev) => {
