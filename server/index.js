@@ -13,16 +13,20 @@ const DATA_DIR = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : pat
 const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 const MANIFEST_PATH = path.join(DATA_DIR, 'manifest.json');
 const PAGES_PATH = path.join(DATA_DIR, 'pages.json');
+const MUSIC_DIR = path.join(DATA_DIR, 'music');
+const MUSIC_CONFIG_PATH = path.join(DATA_DIR, 'music.json');
 
 // Symbolic gate matching src/dev/devKey.ts — not real auth, just keeps casual visitors from
 // hitting the write endpoints directly. Override in Railway if you want a different value.
 const DEV_KEY = process.env.DEV_KEY || 'vknt';
 const PORT = process.env.PORT || 8787;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
 const MAX_PHRASE_LENGTH = 200;
 
 const PAGE_ID_RE = /^[a-z0-9_-]+$/i;
 const DATA_URL_RE = /^data:image\/(png|jpe?g|webp);base64,(.+)$/;
+const AUDIO_DATA_URL_RE = /^data:audio\/([a-z0-9.+-]+);base64,(.+)$/i;
 
 async function readJson(filePath, fallback) {
   try {
@@ -60,10 +64,23 @@ async function deleteImage(id) {
 // book instead of leaving it blank.
 const DEFAULT_PAGES_CONFIG = { phraseOverrides: {}, customPages: [], removedIds: [] };
 
+// Maps a data URL's audio subtype (from the browser's File.type) to a plain file extension.
+function extensionForAudioType(subtype) {
+  const normalized = subtype.toLowerCase();
+  if (normalized === 'mpeg' || normalized === 'mp3') return 'mp3';
+  if (normalized === 'x-m4a' || normalized === 'mp4' || normalized === 'aac') return 'm4a';
+  if (normalized === 'wav' || normalized === 'x-wav') return 'wav';
+  if (normalized === 'ogg') return 'ogg';
+  return 'audio';
+}
+
 await fs.mkdir(UPLOADS_DIR, { recursive: true });
+await fs.mkdir(MUSIC_DIR, { recursive: true });
 
 const app = express();
-app.use(express.json({ limit: '10mb' }));
+// Audio files are much bigger than the compressed JPEGs the image endpoint handles, and base64
+// adds ~33% overhead on top of that, hence the higher limit here vs. a plain image upload.
+app.use(express.json({ limit: '25mb' }));
 
 app.get('/api/images', async (_req, res) => {
   const manifest = await readJson(MANIFEST_PATH, {});
@@ -162,7 +179,46 @@ app.delete('/api/pages/:id', requireDevKey, async (req, res) => {
   res.json({ ok: true });
 });
 
+app.get('/api/music', async (_req, res) => {
+  const config = await readJson(MUSIC_CONFIG_PATH, null);
+  res.json({ url: config ? `/music/${config.filename}` : null });
+});
+
+app.post('/api/music', requireDevKey, async (req, res) => {
+  const match = typeof req.body?.dataUrl === 'string' && req.body.dataUrl.match(AUDIO_DATA_URL_RE);
+  if (!match) {
+    res.status(400).json({ error: 'invalid audio data' });
+    return;
+  }
+  const buffer = Buffer.from(match[2], 'base64');
+  if (buffer.length > MAX_AUDIO_BYTES) {
+    res.status(413).json({ error: 'audio too large' });
+    return;
+  }
+
+  const previous = await readJson(MUSIC_CONFIG_PATH, null);
+  const filename = `cancion-${Date.now()}.${extensionForAudioType(match[1])}`;
+  await fs.writeFile(path.join(MUSIC_DIR, filename), buffer);
+  await writeJson(MUSIC_CONFIG_PATH, { filename });
+
+  if (previous?.filename && previous.filename !== filename) {
+    fs.unlink(path.join(MUSIC_DIR, previous.filename)).catch(() => {});
+  }
+
+  res.json({ url: `/music/${filename}` });
+});
+
+app.delete('/api/music', requireDevKey, async (_req, res) => {
+  const previous = await readJson(MUSIC_CONFIG_PATH, null);
+  if (previous?.filename) {
+    fs.unlink(path.join(MUSIC_DIR, previous.filename)).catch(() => {});
+  }
+  await fs.unlink(MUSIC_CONFIG_PATH).catch(() => {});
+  res.json({ ok: true });
+});
+
 app.use('/uploads', express.static(UPLOADS_DIR, { maxAge: '30d', immutable: true }));
+app.use('/music', express.static(MUSIC_DIR, { maxAge: '30d', immutable: true }));
 app.use(express.static(DIST_DIR));
 
 // A path-less middleware (rather than app.get('*', ...)) matches any route regardless of the

@@ -11,6 +11,8 @@ import ConfigGear from './dev/ConfigGear';
 import { useDevMode } from './dev/useDevMode';
 import { useCustomImages } from './dev/useCustomImages';
 import { usePages } from './dev/usePages';
+import { useMusic } from './dev/useMusic';
+import { useBackgroundMusic } from './audio/useBackgroundMusic';
 
 const AUTH_KEY = 'behappy_authenticated';
 
@@ -25,6 +27,8 @@ export default function App() {
   const { unlocked, unlock, current, dismissCurrent } = useAchievements(achievements);
   const { enabled: devMode, setDevMode } = useDevMode();
   const { images: customImages, saveImage, removeImage } = useCustomImages();
+  const { musicUrl, saveMusic, removeMusic } = useMusic();
+  const { playing, play: playMusic, toggle: toggleMusic, hasMusic } = useBackgroundMusic(musicUrl);
 
   if (!authenticated) {
     return (
@@ -33,9 +37,19 @@ export default function App() {
           onUnlock={() => {
             localStorage.setItem(AUTH_KEY, 'true');
             setAuthenticated(true);
+            // Called synchronously from the "Continuar" click so the browser still treats
+            // play() as user-initiated — see useBackgroundMusic's docstring.
+            playMusic();
           }}
         />
-        <ConfigGear devModeEnabled={devMode} onToggleDevMode={setDevMode} onAddPage={addPage} />
+        <ConfigGear
+          devModeEnabled={devMode}
+          onToggleDevMode={setDevMode}
+          onAddPage={addPage}
+          musicUrl={musicUrl}
+          onSaveMusic={saveMusic}
+          onRemoveMusic={removeMusic}
+        />
       </>
     );
   }
@@ -56,14 +70,21 @@ export default function App() {
       ) : (
         <AchievementsPage achievements={achievements} unlocked={unlocked} onBack={() => setView('book')} />
       )}
-      <MusicToggle />
+      <MusicToggle playing={playing} hasMusic={hasMusic} onToggle={toggleMusic} />
       <TrophyButton
         onClick={() => setView((v) => (v === 'book' ? 'achievements' : 'book'))}
         count={unlocked.size}
         total={achievements.length}
       />
       <AchievementToast achievement={current} onDone={dismissCurrent} />
-      <ConfigGear devModeEnabled={devMode} onToggleDevMode={setDevMode} onAddPage={addPage} />
+      <ConfigGear
+        devModeEnabled={devMode}
+        onToggleDevMode={setDevMode}
+        onAddPage={addPage}
+        musicUrl={musicUrl}
+        onSaveMusic={saveMusic}
+        onRemoveMusic={removeMusic}
+      />
     </div>
   );
 }

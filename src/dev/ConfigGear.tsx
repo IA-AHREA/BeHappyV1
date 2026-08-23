@@ -1,23 +1,36 @@
-import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { useRef, useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DEV_KEY } from './devKey';
+import { fileToDataUrl } from './audioUtils';
 
 interface ConfigGearProps {
   devModeEnabled: boolean;
   onToggleDevMode: (value: boolean) => void;
   onAddPage?: () => Promise<unknown>;
+  musicUrl?: string | null;
+  onSaveMusic?: (dataUrl: string) => Promise<void>;
+  onRemoveMusic?: () => Promise<void>;
 }
 
 type Stage = 'closed' | 'password' | 'panel';
-type AddPageStatus = 'idle' | 'busy' | 'done' | 'error';
+type AsyncStatus = 'idle' | 'busy' | 'done' | 'error';
 
 /** Gear button visible from the very start of the app; gates developer settings behind a password. */
-export default function ConfigGear({ devModeEnabled, onToggleDevMode, onAddPage }: ConfigGearProps) {
+export default function ConfigGear({
+  devModeEnabled,
+  onToggleDevMode,
+  onAddPage,
+  musicUrl,
+  onSaveMusic,
+  onRemoveMusic,
+}: ConfigGearProps) {
   const [stage, setStage] = useState<Stage>('closed');
   const [value, setValue] = useState('');
   const [error, setError] = useState(false);
-  const [addPageStatus, setAddPageStatus] = useState<AddPageStatus>('idle');
+  const [addPageStatus, setAddPageStatus] = useState<AsyncStatus>('idle');
+  const [musicStatus, setMusicStatus] = useState<AsyncStatus>('idle');
+  const musicInputRef = useRef<HTMLInputElement>(null);
 
   async function handleAddPage() {
     setAddPageStatus('busy');
@@ -28,6 +41,32 @@ export default function ConfigGear({ devModeEnabled, onToggleDevMode, onAddPage 
       setAddPageStatus('error');
     }
     setTimeout(() => setAddPageStatus('idle'), 2500);
+  }
+
+  async function handleMusicFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setMusicStatus('busy');
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      await onSaveMusic?.(dataUrl);
+      setMusicStatus('done');
+    } catch {
+      setMusicStatus('error');
+    }
+    setTimeout(() => setMusicStatus('idle'), 2500);
+  }
+
+  async function handleRemoveMusic() {
+    setMusicStatus('busy');
+    try {
+      await onRemoveMusic?.();
+      setMusicStatus('idle');
+    } catch {
+      setMusicStatus('error');
+      setTimeout(() => setMusicStatus('idle'), 2500);
+    }
   }
 
   function open() {
@@ -177,6 +216,44 @@ export default function ConfigGear({ devModeEnabled, onToggleDevMode, onAddPage 
                       {addPageStatus === 'error' && (
                         <p className="font-sans text-[11px] text-accent">No se pudo agregar la página</p>
                       )}
+
+                      <div className="mt-2 flex w-full flex-col items-center gap-2 border-t border-[#f7f3ea]/10 pt-4">
+                        <span className="self-start font-sans text-[10px] uppercase tracking-[0.25em] text-accent">
+                          Música de fondo
+                        </span>
+                        <div className="flex w-full gap-2">
+                          <button
+                            type="button"
+                            onClick={() => musicInputRef.current?.click()}
+                            disabled={musicStatus === 'busy'}
+                            className="flex-1 rounded-full border border-[#f7f3ea]/20 bg-[#f7f3ea]/5 px-4 py-2.5 font-sans text-xs font-semibold uppercase tracking-wide text-[#f3ead9] disabled:opacity-50"
+                          >
+                            {musicStatus === 'busy' ? 'Subiendo…' : musicUrl ? 'Cambiar canción' : 'Elegir canción'}
+                          </button>
+                          {musicUrl && musicStatus !== 'busy' && (
+                            <button
+                              type="button"
+                              onClick={handleRemoveMusic}
+                              className="rounded-full border border-[#f7f3ea]/15 px-4 py-2.5 font-sans text-xs font-semibold uppercase tracking-wide text-[#cbb9a0]"
+                            >
+                              Quitar
+                            </button>
+                          )}
+                        </div>
+                        {musicStatus === 'done' && (
+                          <p className="font-sans text-[11px] text-[#cbb9a0]">Canción guardada — suena al entrar al libro</p>
+                        )}
+                        {musicStatus === 'error' && (
+                          <p className="font-sans text-[11px] text-accent">No se pudo guardar la canción</p>
+                        )}
+                        <input
+                          ref={musicInputRef}
+                          type="file"
+                          accept="audio/*"
+                          onChange={handleMusicFile}
+                          className="hidden"
+                        />
+                      </div>
                     </div>
                   )}
 

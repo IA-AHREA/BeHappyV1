@@ -33,10 +33,12 @@ src/
   illustrations/
     primitives.tsx           motor de animación compartido (ver abajo)
     <Nombre>.tsx              una ilustración SVG por escena (31 archivos)
-  audio/useAmbientPiano.ts   piano ambiental generativo (Web Audio API, sin assets)
+  audio/useBackgroundMusic.ts  reproduce la canción de fondo subida desde el modo desarrollador
+                               (ver abajo) — reemplazó al piano ambiental generativo
   dev/
     ConfigGear.tsx            tuerca ⚙️ (arriba-izquierda, visible desde el arranque) + modal de
-                               contraseña + panel de "Modo desarrollador"
+                               contraseña + panel de "Modo desarrollador" (switch, agregar página,
+                               subir/quitar canción de fondo)
     DevImagePanel.tsx         panel que aparece sobre cada página con ilustración cuando el modo
                                desarrollador está activo: elegir imagen (se guarda sola) / quitar
     useDevMode.ts              hook: persiste si el modo desarrollador está activo (localStorage,
@@ -45,13 +47,15 @@ src/
                                (fetch a /api/images), no localStorage
     usePages.ts                 hook: trae/edita/agrega/borra páginas vía la API (/api/pages),
                                fusionando el resultado con DEFAULT_PAGES
+    useMusic.ts                 hook: trae/guarda/borra la canción de fondo vía la API (/api/music)
     DevTextPanel.tsx            panel que aparece sobre la mitad de texto de cada página cuando
                                el modo desarrollador está activo: editar la frase (auto-guarda) /
                                eliminar la página (doble tap para confirmar)
     imageUtils.ts              redimensiona/comprime la imagen elegida a un data URL (canvas)
+    audioUtils.ts                lee el archivo de audio elegido como data URL (sin comprimir)
     devKey.ts                  contraseña compartida entre el cliente y `server/index.js`
 server/
-  index.js                   Express: sirve dist/ + API de imágenes y de páginas (ver abajo)
+  index.js                   Express: sirve dist/ + API de imágenes, páginas y música (ver abajo)
 ```
 
 ## Acceso y logros
@@ -148,6 +152,30 @@ server/
   `App.tsx`, que arma la lista con `usePages()`). Si algún día se borraran las 31 páginas
   originales sin agregar ninguna nueva, `Book.tsx` muestra un mensaje en vez de romperse con un
   array vacío.
+
+## Modo desarrollador (canción de fondo)
+
+- Reemplaza al piano ambiental generativo que había antes (`useAmbientPiano.ts`, borrado): ahora
+  suena una canción real que se sube una sola vez desde el modo desarrollador, para todo el libro
+  (no una por página).
+- Panel de la tuerca ⚙️, sección "Música de fondo" (solo visible con el modo activo): "Elegir
+  canción" abre el selector de archivos de audio; se sube sola al elegirla (mismo criterio que las
+  imágenes, sin botón "Guardar" aparte) vía `POST /api/music` (header `x-dev-key`, body
+  `{ dataUrl }`). "Quitar" llama `DELETE /api/music`.
+- **Autoplay**: el navegador exige un gesto real del usuario para reproducir audio con sonido —
+  por suerte ya hay uno: el click en "Continuar" del gate de contraseña (`WelcomeGate.tsx`). El
+  `<audio>` se crea una sola vez en `useBackgroundMusic.ts` (no en cada render) y `play()` se llama
+  de forma síncrona dentro de ese mismo click (`App.tsx`, prop `onUnlock`) — si se le agrega un
+  `await` o un `setTimeout` en el medio, los navegadores dejan de reconocerlo como iniciado por el
+  usuario y bloquean el audio. La canción hace loop; el botón 🎵 (abajo-derecha, antes controlaba
+  el piano) ahora pausa/reanuda esa misma canción, y **no aparece en absoluto** si todavía no se
+  subió ninguna (`hasMusic` en `MusicToggle.tsx`).
+- **Servidor** (`server/index.js`, mismo patrón que las imágenes): el archivo se guarda en
+  `DATA_DIR/music/cancion-<timestamp>.<ext>` (la extensión sale del MIME type del archivo elegido)
+  + `DATA_DIR/music.json` (`{ filename }`, solo una canción a la vez, la anterior se borra al subir
+  una nueva). `GET /api/music` es público. El límite de tamaño es más alto que el de imágenes
+  (`express.json({ limit: '25mb' })`, tope de archivo `MAX_AUDIO_BYTES = 15MB`) porque un audio sin
+  comprimir pesa mucho más que una foto ya comprimida a JPEG.
 
 ## Estilo visual de las ilustraciones
 

@@ -11,6 +11,7 @@ export default defineConfig({
     proxy: {
       '/api': API_PROXY_TARGET,
       '/uploads': API_PROXY_TARGET,
+      '/music': API_PROXY_TARGET,
     },
   },
 });

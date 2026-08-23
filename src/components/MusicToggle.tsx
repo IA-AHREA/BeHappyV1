@@ -1,15 +1,20 @@
 import { motion } from 'framer-motion';
-import { useAmbientPiano } from '../audio/useAmbientPiano';
 
-/** Floating button that starts/stops the generative ambient piano loop. */
-export default function MusicToggle() {
-  const { playing, toggle } = useAmbientPiano();
+interface MusicToggleProps {
+  playing: boolean;
+  hasMusic: boolean;
+  onToggle: () => void;
+}
+
+/** Floating button that mutes/unmutes the book's background song (uploaded via dev mode). Hidden until one is set. */
+export default function MusicToggle({ playing, hasMusic, onToggle }: MusicToggleProps) {
+  if (!hasMusic) return null;
 
   return (
     <motion.button
       type="button"
-      onClick={toggle}
-      aria-label={playing ? 'Silenciar la música de piano' : 'Reproducir música de piano relajante'}
+      onClick={onToggle}
+      aria-label={playing ? 'Silenciar la música' : 'Reproducir la música'}
       aria-pressed={playing}
       whileHover={{ scale: 1.05, y: -1 }}
       whileTap={{ scale: 0.92 }}
