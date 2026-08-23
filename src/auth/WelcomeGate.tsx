@@ -30,6 +30,10 @@ export default function WelcomeGate({ onUnlock }: WelcomeGateProps) {
           31 razones para ser feliz
         </span>
         <h1 className="font-caveat text-5xl font-semibold text-[#f3ead9]">Bienvenida</h1>
+        <p className="font-sans text-sm text-[#cbb9a0]/90">
+          Existen motivos para ser feliz, ¿alguna vez los has pensado? Yo te comparto los míos:
+          espero que te gusten.
+        </p>
         <p className="font-sans text-sm text-[#cbb9a0]/80">
           Para ingresar, introduce la contraseña y continúa
         </p>

@@ -39,6 +39,13 @@ const ICONS: Record<string, string> = {
   pausa: '🌳',
   proceso: '🦋',
   empieza: '🌅',
+  tu: '🎁',
+};
+
+// A page can override its auto-generated achievement (which just quotes the phrase) — used for
+// "tu", the personal closing page, where the phrase itself doesn't make sense as an achievement title.
+const ACHIEVEMENT_OVERRIDES: Record<string, { title: string; description: string }> = {
+  tu: { title: 'Feliz cumple años', description: 'Por vos. Feliz cumpleaños.' },
 };
 
 export const completionAchievement: Achievement = {
@@ -49,17 +56,18 @@ export const completionAchievement: Achievement = {
 };
 
 /**
- * One achievement per page, titled after its phrase (e.g. "Lee un libro"), plus the completion
- * bonus. Built from the current page list (not a static import) so dev-mode edits/additions/
- * removals of pages are reflected automatically.
+ * One achievement per page, titled after its phrase (e.g. "Lee un libro") unless overridden, plus
+ * the completion bonus. Built from the current page list (not a static import) so dev-mode edits/
+ * additions/removals of pages are reflected automatically.
  */
 export function buildAchievements(pages: BookPage[]): Achievement[] {
   const pageAchievements = pages.map((page) => {
     const phrase = page.phrase.replace(/\n/g, ' ');
+    const override = ACHIEVEMENT_OVERRIDES[page.id];
     return {
       id: page.id,
-      title: `${phrase}.`,
-      description: `Leíste la razón "${phrase}".`,
+      title: override?.title ?? `${phrase}.`,
+      description: override?.description ?? `Leíste la razón "${phrase}".`,
       icon: ICONS[page.id] ?? '⭐',
     };
   });

@@ -49,7 +49,10 @@ export default function Book({
   const [leafIndex, setLeafIndex] = useState(0);
 
   const totalSpreads = pages.length;
-  const lastLeafIndex = totalSpreads * 2 - 2;
+  // Leaves are 0-indexed text+art pairs per spread, so the last one is `totalSpreads * 2 - 1`
+  // (a stray `- 2` here previously disabled "next" one leaf early, stranding the reader on the
+  // last spread's text side and making its illustration unreachable via the button).
+  const lastLeafIndex = totalSpreads * 2 - 1;
   const spread = Math.min(Math.floor(leafIndex / 2), totalSpreads - 1);
   const atStart = leafIndex <= 0;
   const atEnd = leafIndex >= lastLeafIndex;

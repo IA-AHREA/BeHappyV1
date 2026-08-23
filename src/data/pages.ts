@@ -72,4 +72,11 @@ export const DEFAULT_PAGES: BookPage[] = [
   { id: 'pausa', phrase: 'Haz\nuna pausa', Illustration: TreeRest },
   { id: 'proceso', phrase: 'Confía\nen el proceso', Illustration: Butterfly },
   { id: 'empieza', phrase: 'Empieza\nhoy', Illustration: Sunrise },
+  {
+    id: 'tu',
+    phrase:
+      'Tú.\n\nPorque entre tanto estrés,\nauditorías y cortes de luz,\nencontrar a alguien con quien\nreírse de la vida\nes de lo mejor que hay',
+    // Sin Illustration a propósito: esta página se ilustra a mano con una foto real desde el
+    // modo desarrollador (el lado de arte muestra "Sin imagen todavía" hasta que se le suba una).
+  },
 ];
