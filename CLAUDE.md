@@ -244,17 +244,24 @@ Patrón típico de un archivo de ilustración:
 | 30 | Confía en el proceso. | `Butterfly.tsx` | Rastro de una oruga que se transforma en mariposa | `walk` (oruga), `flap` (alas) |
 | 31 | Empieza hoy. | `Sunrise.tsx` | El sol saliendo sobre el horizonte | `float` (sol, aves) |
 | 32 | Tú. Porque entre tanto estrés... | *(sin ilustración fija)* | Página de cierre personal, a propósito sin `Illustration` — se ilustra con una foto real desde el modo desarrollador | — |
-| 33 | Feliz cumpleaños, Kristi... | *(sin ilustración)* | Mensaje de cumpleaños de cierre, firmado — a propósito sin foto ni ilustración | — |
+| 33 | Feliz cumpleaños, Kristi... | *(sin lado de arte)* | Mensaje de cumpleaños de cierre, firmado — `textOnly: true`, ni siquiera tiene el placeholder de imagen | — |
 
 Las páginas 32 y 33 (`id: 'tu'` e `id: 'cumple'` en `DEFAULT_PAGES`) son distintas a las demás: son
-dedicatorias más largas, no un consejo corto, y no tienen componente de ilustración — el lado de
-arte muestra "Sin imagen todavía" (la 32 puede recibir una foto real por el modo desarrollador; la
-33 se dejó explícitamente solo de texto, sin foto). Sus logros también son un caso especial: en vez
-de citar la frase completa (como todas las demás), `ACHIEVEMENT_OVERRIDES` en `achievements/data.ts`
-les pone título propio — "Tú, porque eres única" y "Feliz cumple años" respectivamente — si se
-agrega otra página que necesite un logro con título propio en vez del genérico, ese es el lugar. El
-logro de cierre "Las 31 razones" se dejó como estaba a propósito (no se hizo dinámico ni se le sumó
-página): es el nombre de marca del libro, no un conteo literal de páginas.
+dedicatorias más largas, no un consejo corto. La 32 no tiene componente de ilustración pero SÍ
+tiene lado de arte — muestra "Sin imagen todavía" hasta que se le suba una foto real por el modo
+desarrollador. La 33 va un paso más allá con `textOnly: true`: no genera lado de arte en absoluto
+(`Book.tsx` no agrega esa `<Leaf>` para páginas `textOnly`), así que el lector nunca pasa una hoja
+vacía después de leerla — es de verdad la última página del libro. Usar `textOnly` en una página
+que SÍ se piensa ilustrar más adelante la deja inalcanzable para subirle una foto, así que es
+solo para páginas que van a quedar para siempre sin imagen (ver `Book.tsx`, `leafPageMap`, que
+arma el mapeo hoja física → página para que la cuenta de "página X / Y" y el botón "siguiente"
+funcionen igual con una mezcla de páginas de 1 y 2 hojas). Sus logros también son un caso
+especial: en vez de citar la frase completa (como todas las demás), `ACHIEVEMENT_OVERRIDES` en
+`achievements/data.ts` les pone título propio — "Tú, porque eres única" y "Feliz cumple años"
+respectivamente — si se agrega otra página que necesite un logro con título propio en vez del
+genérico, ese es el lugar. El logro de cierre "Las 31 razones" se dejó como estaba a propósito (no
+se hizo dinámico ni se le sumó página): es el nombre de marca del libro, no un conteo literal de
+páginas.
 
 Como la frase de estas páginas es mucho más larga que las demás (una dedicatoria, no un comando de
 2-4 palabras), `Page.tsx` elige el tamaño de letra según el largo de la frase (`textSizeClass`) en

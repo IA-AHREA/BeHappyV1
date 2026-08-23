@@ -37,6 +37,8 @@ export interface BookPage {
   phrase: string;
   /** Missing only for pages added through dev mode — they rely entirely on a custom image. */
   Illustration?: ComponentType;
+  /** True for a page with no art side at all (e.g. a closing note) — the reader never flips past an empty image page to reach it/finish the book. */
+  textOnly?: boolean;
 }
 
 /** The book's original 31 pages. Dev-mode edits/additions/removals layer on top — see usePages.ts. */
@@ -83,6 +85,8 @@ export const DEFAULT_PAGES: BookPage[] = [
     id: 'cumple',
     phrase:
       'Feliz cumple\naños, Kristi.\n\nEspero que todos tus\ndeseos y sueños se cumplan.\n\nEres alguien muy especial,\njamás olvides lo genial\nque eres.\n\nAtte: Angel Torres',
-    // Sin Illustration a propósito: página de cierre solo de texto, sin foto.
+    // textOnly: de verdad la última página — sin lado de arte, ni siquiera un placeholder para
+    // subirle una foto (a diferencia de "tu", esta no está pensada para recibir una imagen).
+    textOnly: true,
   },
 ];

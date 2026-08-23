@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import type { FlipEvent } from 'react-pageflip';
@@ -49,11 +49,19 @@ export default function Book({
   const [leafIndex, setLeafIndex] = useState(0);
 
   const totalSpreads = pages.length;
-  // Leaves are 0-indexed text+art pairs per spread, so the last one is `totalSpreads * 2 - 1`
-  // (a stray `- 2` here previously disabled "next" one leaf early, stranding the reader on the
-  // last spread's text side and making its illustration unreachable via the button).
-  const lastLeafIndex = totalSpreads * 2 - 1;
-  const spread = Math.min(Math.floor(leafIndex / 2), totalSpreads - 1);
+  // Most pages contribute 2 leaves (text + art); a `textOnly` page (e.g. a closing note with no
+  // photo) contributes just 1, so a reader never has to flip past an empty art side to finish the
+  // book. This map turns a physical leaf index into "which page is this?", handling that mix.
+  const leafPageMap = useMemo(() => {
+    const map: number[] = [];
+    pages.forEach((page, pageIndex) => {
+      map.push(pageIndex);
+      if (!page.textOnly) map.push(pageIndex);
+    });
+    return map;
+  }, [pages]);
+  const lastLeafIndex = leafPageMap.length - 1;
+  const spread = leafPageMap[Math.min(leafIndex, lastLeafIndex)] ?? 0;
   const atStart = leafIndex <= 0;
   const atEnd = leafIndex >= lastLeafIndex;
 
@@ -117,29 +125,36 @@ export default function Book({
           style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.45))' }}
           onFlip={handleFlip}
         >
-          {pages.flatMap((page, i) => [
-            <Leaf key={`text-${page.id}`}>
-              <Page
-                side="text"
-                index={i}
-                phrase={page.phrase}
-                devMode={devMode}
-                onEditPhrase={(phrase) => onEditPhrase?.(page.id, phrase) ?? Promise.resolve()}
-                onDeletePage={() => onDeletePage?.(page.id) ?? Promise.resolve()}
-              />
-            </Leaf>,
-            <Leaf key={`art-${page.id}`}>
-              <Page
-                side="art"
-                index={i}
-                Illustration={page.Illustration}
-                customImage={customImages?.[page.id]}
-                devMode={devMode}
-                onSaveImage={(dataUrl) => onSaveImage?.(page.id, dataUrl) ?? Promise.resolve()}
-                onRemoveImage={() => onRemoveImage?.(page.id) ?? Promise.resolve()}
-              />
-            </Leaf>,
-          ])}
+          {pages.flatMap((page, i) => {
+            const leaves = [
+              <Leaf key={`text-${page.id}`}>
+                <Page
+                  side="text"
+                  index={i}
+                  phrase={page.phrase}
+                  devMode={devMode}
+                  onEditPhrase={(phrase) => onEditPhrase?.(page.id, phrase) ?? Promise.resolve()}
+                  onDeletePage={() => onDeletePage?.(page.id) ?? Promise.resolve()}
+                />
+              </Leaf>,
+            ];
+            if (!page.textOnly) {
+              leaves.push(
+                <Leaf key={`art-${page.id}`}>
+                  <Page
+                    side="art"
+                    index={i}
+                    Illustration={page.Illustration}
+                    customImage={customImages?.[page.id]}
+                    devMode={devMode}
+                    onSaveImage={(dataUrl) => onSaveImage?.(page.id, dataUrl) ?? Promise.resolve()}
+                    onRemoveImage={() => onRemoveImage?.(page.id) ?? Promise.resolve()}
+                  />
+                </Leaf>,
+              );
+            }
+            return leaves;
+          })}
         </HTMLFlipBook>
       </div>
 
