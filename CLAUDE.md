@@ -208,7 +208,7 @@ Patrón típico de un archivo de ilustración:
 </IllustrationSvg>
 ```
 
-## Las páginas (31 originales + 1 de cierre)
+## Las páginas (31 originales + 2 de cierre)
 
 | # | Frase | Archivo | Escena | Loop(s) de movimiento |
 |---|---|---|---|---|
@@ -244,20 +244,22 @@ Patrón típico de un archivo de ilustración:
 | 30 | Confía en el proceso. | `Butterfly.tsx` | Rastro de una oruga que se transforma en mariposa | `walk` (oruga), `flap` (alas) |
 | 31 | Empieza hoy. | `Sunrise.tsx` | El sol saliendo sobre el horizonte | `float` (sol, aves) |
 | 32 | Tú. Porque entre tanto estrés... | *(sin ilustración fija)* | Página de cierre personal, a propósito sin `Illustration` — se ilustra con una foto real desde el modo desarrollador | — |
+| 33 | Feliz cumpleaños, Kristi... | *(sin ilustración)* | Mensaje de cumpleaños de cierre, firmado — a propósito sin foto ni ilustración | — |
 
-La página 32 (`id: 'tu'` en `DEFAULT_PAGES`) es distinta a las demás: es una dedicatoria más
-larga, no un consejo corto, y no tiene componente de ilustración — el lado de arte muestra "Sin
-imagen todavía" hasta que se le suba una foto real por el modo desarrollador. Su logro también es
-un caso especial: en vez de citar la frase (como todas las demás), `ACHIEVEMENT_OVERRIDES` en
-`achievements/data.ts` le pone el título "Feliz cumple años" — si se agrega otra página que
-necesite un logro con título propio en vez del genérico, ese es el lugar. El logro de cierre
-"Las 31 razones" se dejó como estaba a propósito (no se hizo dinámico ni se le sumó la página 32):
-es el nombre de marca del libro, no un conteo literal de páginas.
+Las páginas 32 y 33 (`id: 'tu'` e `id: 'cumple'` en `DEFAULT_PAGES`) son distintas a las demás: son
+dedicatorias más largas, no un consejo corto, y no tienen componente de ilustración — el lado de
+arte muestra "Sin imagen todavía" (la 32 puede recibir una foto real por el modo desarrollador; la
+33 se dejó explícitamente solo de texto, sin foto). Sus logros también son un caso especial: en vez
+de citar la frase completa (como todas las demás), `ACHIEVEMENT_OVERRIDES` en `achievements/data.ts`
+les pone título propio — "Tú, porque eres única" y "Feliz cumple años" respectivamente — si se
+agrega otra página que necesite un logro con título propio en vez del genérico, ese es el lugar. El
+logro de cierre "Las 31 razones" se dejó como estaba a propósito (no se hizo dinámico ni se le sumó
+página): es el nombre de marca del libro, no un conteo literal de páginas.
 
-Como la frase de la página 32 es mucho más larga que las demás (una dedicatoria, no un comando de
-2-4 palabras), `Page.tsx` ahora elige el tamaño de letra según el largo de la frase
-(`textSizeClass`) en vez de un tamaño fijo — esto también protege cualquier frase editada desde el
-modo desarrollador que termine siendo larga, no es exclusivo de esta página.
+Como la frase de estas páginas es mucho más larga que las demás (una dedicatoria, no un comando de
+2-4 palabras), `Page.tsx` elige el tamaño de letra según el largo de la frase (`textSizeClass`) en
+vez de un tamaño fijo — esto también protege cualquier frase editada desde el modo desarrollador
+que termine siendo larga, no es exclusivo de estas páginas.
 
 La pantalla "Bienvenida" (`WelcomeGate.tsx`) también suma un párrafo de introducción ("Existen
 motivos para ser feliz...") entre el título y el texto de la contraseña.

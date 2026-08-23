@@ -39,13 +39,15 @@ const ICONS: Record<string, string> = {
   pausa: '🌳',
   proceso: '🦋',
   empieza: '🌅',
-  tu: '🎁',
+  tu: '✨',
+  cumple: '🎁',
 };
 
 // A page can override its auto-generated achievement (which just quotes the phrase) — used for
-// "tu", the personal closing page, where the phrase itself doesn't make sense as an achievement title.
+// the personal closing pages, where the phrase itself doesn't make sense as an achievement title.
 const ACHIEVEMENT_OVERRIDES: Record<string, { title: string; description: string }> = {
-  tu: { title: 'Feliz cumple años', description: 'Por vos. Feliz cumpleaños.' },
+  tu: { title: 'Tú, porque eres única', description: 'Por vos.' },
+  cumple: { title: 'Feliz cumple años', description: 'Que se cumplan todos tus deseos.' },
 };
 
 export const completionAchievement: Achievement = {

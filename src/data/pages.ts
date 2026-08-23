@@ -79,4 +79,10 @@ export const DEFAULT_PAGES: BookPage[] = [
     // Sin Illustration a propósito: esta página se ilustra a mano con una foto real desde el
     // modo desarrollador (el lado de arte muestra "Sin imagen todavía" hasta que se le suba una).
   },
+  {
+    id: 'cumple',
+    phrase:
+      'Feliz cumple\naños, Kristi.\n\nEspero que todos tus\ndeseos y sueños se cumplan.\n\nEres alguien muy especial,\njamás olvides lo genial\nque eres.\n\nAtte: Angel Torres',
+    // Sin Illustration a propósito: página de cierre solo de texto, sin foto.
+  },
 ];
